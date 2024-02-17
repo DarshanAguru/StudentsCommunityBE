@@ -49,7 +49,7 @@ export const login = async (req, res) => {
       return res.status(500).send({ message: 'Internal Server Error' }) // Server Error .. Retry login
     }
 
-    const dataToSend = { ...globalAdmin._doc, password: undefined, created_at: undefined, updated_at: undefined, __V: undefined }
+    const dataToSend = { ...globalAdmin._doc, password: undefined, created_at: undefined, updated_at: undefined, __v: undefined }
     res.status(200).send(dataToSend) // retuning teacher details
   } catch (err) {
     console.log(err)
