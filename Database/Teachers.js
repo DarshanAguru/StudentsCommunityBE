@@ -11,7 +11,7 @@ const TeachersSchema = new Schema({
   password: { type: String, required: true },
   verificationStatus: { type: String, default: 'Pending' },
   description: { type: String },
-  assigments: { type: [String] },
+  assignments: { type: [String] },
   messages: { type: [String] }
 },
 {

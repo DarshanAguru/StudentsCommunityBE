@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose'
 
-const AssigmentSubmissions = new Schema({
+const AssignmentSubmissions = new Schema({
   senderId: { type: String },
   senderName: { type: String },
   message: { type: String },
@@ -13,14 +13,14 @@ const AssigmentSubmissions = new Schema({
 })
 
 const AssignmentsSchema = new Schema({
-  assigmentId: { type: String, required: true }, // coversation id -- teacher , nonce, msg no 99840461973@0354
-  assigmentData: { type: String },
+  assignmentId: { type: String, required: true }, // coversation id -- teacher , nonce, msg no 99840461973@0354
+  assignmentData: { type: String },
   imageLink: { type: String },
   publishDate: { type: Date },
   deadline: { type: Date },
   school: { type: String },
   grade: { type: String },
-  submissions: { type: [AssigmentSubmissions] }
+  submissions: { type: [AssignmentSubmissions] }
 },
 {
   timestamps: {

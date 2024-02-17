@@ -9,7 +9,7 @@ const StudentSchema = new Schema({
   age: { type: String },
   gender: { type: String },
   password: { type: String, required: true },
-  assigments: { type: [String] },
+  assignments: { type: [String] },
   messages: { type: [String] }
 },
 {
