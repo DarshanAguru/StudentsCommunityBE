@@ -1,7 +1,7 @@
-import { Mentors } from '../Database/Mentors'
-import { Messages } from '../Database/Messages'
-import { Students } from '../Database/Students'
-import { Teachers } from '../Database/Teachers'
+import { Mentors } from '../Database/Mentors.js'
+import { Messages } from '../Database/Messages.js'
+import { Students } from '../Database/Students.js'
+import { Teachers } from '../Database/Teachers.js'
 
 export const getAllMessages = async (req, res) => {
   try {
