@@ -15,7 +15,7 @@ export const login = async (req, res) => {
     }
 
     // if incorrect credentials
-    if (!verifyPass(password, globalAdmin.password)) {
+    if (!await verifyPass(password, globalAdmin.password)) {
       return res.status(401).send({ message: 'Not authorized' })
     }
 

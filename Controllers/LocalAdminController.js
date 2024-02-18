@@ -22,7 +22,7 @@ export const login = async (req, res) => {
       return res.status(401).send({ message: 'Rejected' }) // Not authorized
     }
 
-    if (!verifyPass(password, localAdmin.password)) {
+    if (!await verifyPass(password, localAdmin.password)) {
       return res.status(401).send({ message: 'Not authorized' })
     }
 

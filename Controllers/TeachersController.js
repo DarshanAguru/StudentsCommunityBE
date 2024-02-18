@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import { hashPassword, verifyPass } from '../utils/passwordVerifyAndHash.js'
 import { Assignments } from '../Database/Assignments.js'
 import { Students } from '../Database/Students.js'
+import { LocalAdmins } from '../Database/LocalAdmin.js'
 
 export const login = async (req, res) => {
   const { phoneNumber, password } = req.body // taking post parameters from request
@@ -23,7 +24,7 @@ export const login = async (req, res) => {
     }
 
     // if incorrect credentials
-    if (!verifyPass(password, teacher.password)) {
+    if (!await verifyPass(password, teacher.password)) {
       return res.status(401).send({ message: 'Not authorized' })
     }
 
@@ -196,6 +197,19 @@ export const getAllAssignmentsOfTeacher = async (req, res) => {
       }
     }
     res.status(200).send(arrAssigns)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const getAllSchools = async (req, res) => {
+  try {
+    const schools = await LocalAdmins.find({ verificationStatus: 'verified' }, 'institution')
+    if (!schools) {
+      return res.status(404).send({ message: 'Not Found' })
+    }
+    res.status(200).send(schools)
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })

@@ -1,12 +1,15 @@
 import express from 'express'
 import { verifyToken } from '../utils/jwt.js'
-import { login, register, logout, submitAssigment, getAllassignmentsBySchoolAndGrade, getAllMessagesOfStudent } from '../Controllers/StudentController.js'
+import { login, register, logout, submitAssigment, getAllassignmentsBySchoolAndGrade, getAllMessagesOfStudent, getAllSchools } from '../Controllers/StudentController.js'
 
 const StudentRouter = express.Router()
 
 // login and Register
 StudentRouter.post('/login', login)
 StudentRouter.post('/register', register)
+
+// get methods
+StudentRouter.get('/getAllSchools', getAllSchools)
 
 // requires Login and jwt middleware
 StudentRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
