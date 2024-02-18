@@ -3,6 +3,7 @@ import { VerificationTag } from '../Database/VerificationTag.js'
 import jwt from 'jsonwebtoken'
 import { hashPassword, verifyPass } from '../utils/passwordVerifyAndHash.js'
 import { Assignments } from '../Database/Assignments.js'
+import { Messages } from '../Database/Messages.js'
 
 export const login = async (req, res) => {
   const { phoneNumber, password } = req.body // taking post parameters from request
@@ -112,7 +113,14 @@ export const getAllMessagesOfStudent = async (req, res) => {
     if (!student) {
       return res.status(404).send({ message: 'Student Details not found' })
     }
-    res.send(200).send(student.messages)
+    const arrMessages = []
+    for (let i = 0; i < student.messages.length; i++) {
+      if (student.messages[i].split('@')[0] === studentId) {
+        const msg = await Messages.findOne({ messageId: student.messages[i] })
+        arrMessages.push(msg)
+      }
+    }
+    res.status(200).send(arrMessages)
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })

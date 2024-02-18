@@ -180,3 +180,24 @@ export const getStudentsBySchool = async (req, res) => {
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
+
+export const getAllAssignmentsOfTeacher = async (req, res) => {
+  const teacherId = req.params.id
+  try {
+    const teacher = await Teachers.findOne({ _id: teacherId })
+    if (!teacher) {
+      return res.status(404).send({ message: 'Teacher Details not found' })
+    }
+    const arrAssigns = []
+    for (let i = 0; i < teacher.assignments.length; i++) {
+      if (teacher.assignments[i].split('@')[0] === teacherId) {
+        const assign = await Assignments.findOne({ assignmentId: teacher.assignments[i] })
+        arrAssigns.push(assign)
+      }
+    }
+    res.status(200).send(arrAssigns)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}

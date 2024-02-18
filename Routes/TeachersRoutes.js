@@ -1,6 +1,6 @@
 import express from 'express'
 import { verifyToken } from '../utils/jwt.js'
-import { login, register, logout, postAssigment, getAllassignmentsBySchoolAndGrade, getStudentsBySchool } from '../Controllers/TeachersController.js'
+import { login, register, logout, postAssigment, getAllassignmentsBySchoolAndGrade, getStudentsBySchool, getAllAssignmentsOfTeacher } from '../Controllers/TeachersController.js'
 
 const TeacherRouter = express.Router()
 
@@ -13,6 +13,7 @@ TeacherRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(re
 TeacherRouter.post('/postassignment/:id', verifyToken, postAssigment)
 TeacherRouter.post('/getAllassignments', verifyToken, getAllassignmentsBySchoolAndGrade)
 TeacherRouter.post('/getAllStudents', verifyToken, getStudentsBySchool)
+TeacherRouter.post('/getassignments/:id', verifyToken, getAllAssignmentsOfTeacher)
 
 // requires logged in
 TeacherRouter.post('/logout/:id', logout)
