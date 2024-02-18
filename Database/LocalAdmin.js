@@ -9,7 +9,7 @@ const LocalAdminsSchema = new Schema({
   age: { type: Number },
   gender: { type: String },
   password: { type: String, required: true },
-  verificationStatus: { type: String, default: 'Pending' },
+  verificationStatus: { type: String, default: 'pending' },
   description: { type: String }
 },
 {

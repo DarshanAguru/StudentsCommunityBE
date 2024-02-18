@@ -87,7 +87,7 @@ export const addReply = async (req, res) => {
     }
 
     if (senderType === 'Teacher') {
-      const teacher = Teachers.findOne({ _id: senderId })
+      const teacher = await Teachers.findOne({ _id: senderId })
       if (!teacher) {
         return res.status(404).send({ message: 'Not Found' })
       }
@@ -100,7 +100,7 @@ export const addReply = async (req, res) => {
       }
     }
     if (senderType === 'Student') {
-      const student = Students.findOne({ _id: senderId })
+      const student = await Students.findOne({ _id: senderId })
       if (!student) {
         return res.status(404).send({ message: 'Not Found' })
       }
@@ -113,7 +113,7 @@ export const addReply = async (req, res) => {
       }
     }
     if (senderType === 'Mentor') {
-      const mentor = Mentors.findOne({ _id: senderId })
+      const mentor = await Mentors.findOne({ _id: senderId })
       if (!mentor) {
         return res.status(404).send({ message: 'Not Found' })
       }

@@ -139,3 +139,17 @@ export const verifyTeacher = async (req, res) => {
     res.status(500).send({ message: 'Internal Server Error' })
   }
 }
+
+export const getTeachersBySchool = async (req, res) => {
+  const school = req.body.school
+  try {
+    const teachers = await Teachers.find({ institution: school })
+    if (!teachers) {
+      return res.status(404).send({ message: 'Not Found' })
+    }
+    res.status(200).send(teachers)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}

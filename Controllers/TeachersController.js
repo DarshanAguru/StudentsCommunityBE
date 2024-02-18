@@ -3,6 +3,7 @@ import { VerificationTag } from '../Database/VerificationTag.js'
 import jwt from 'jsonwebtoken'
 import { hashPassword, verifyPass } from '../utils/passwordVerifyAndHash.js'
 import { Assignments } from '../Database/Assignments.js'
+import { Students } from '../Database/Students.js'
 
 export const login = async (req, res) => {
   const { phoneNumber, password } = req.body // taking post parameters from request
@@ -131,11 +132,11 @@ export const postAssigment = async (req, res) => {
     }
 
     const assignmentSave = new Assignments(assignment)
-    const teacher = Teachers.findOne({ _id: teacherId })
+    const teacher = await Teachers.findOne({ _id: teacherId })
     if (!teacher) {
       return res.status(404).send({ message: 'Not Found' })
     }
-    if (!teacher.assignments || teacher.assigments.length === 0) {
+    if (!teacher.assignments || teacher.assignments.length === 0) {
       teacher.assignments.push(assignmentId)
       await teacher.save()
     } else if (!teacher.assignments.includes(assignmentId)) {
@@ -160,6 +161,20 @@ export const getAllassignmentsBySchoolAndGrade = async (req, res) => {
       return res.status(404).send({ message: 'Not Found' })
     }
     res.status(200).send(assignments)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const getStudentsBySchool = async (req, res) => {
+  const school = req.body.school
+  try {
+    const students = await Students.find({ school })
+    if (!students) {
+      return res.status(404).send({ message: 'Not Found' })
+    }
+    res.status(200).send(students)
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })

@@ -155,3 +155,29 @@ export const verifyLocalAdmin = async (req, res) => {
     res.status(500).send({ message: 'Internal Server Error' })
   }
 }
+
+export const getAllLocalAdmins = async (req, res) => {
+  try {
+    const localAdmins = await LocalAdmins.find({})
+    if (!localAdmins) {
+      return res.status(404).send({ message: 'Not Found' })
+    }
+    res.status(200).send(localAdmins)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const getAllMentors = async (req, res) => {
+  try {
+    const mentors = await Mentors.find({})
+    if (!mentors) {
+      return res.status(404).send({ message: 'Not Found' })
+    }
+    res.status(200).send(mentors)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
