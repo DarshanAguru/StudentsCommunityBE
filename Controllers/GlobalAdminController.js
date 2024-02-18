@@ -196,6 +196,10 @@ export const rejectMentor = async (req, res) => {
       return res.status(200).send({ message: 'Already Verified' })
     }
 
+    if (mentors.verificationStatus === 'rejected') {
+      return res.status(200).send({ message: 'Already Rejected' })
+    }
+
     const updateMentor = await Mentors.updateOne({ _id: mentorId }, { verificationStatus: 'rejected' })
     if (!updateMentor) {
       return res.status(500).send({ message: 'Internal Server Error' })
@@ -219,6 +223,10 @@ export const rejectLocalAdmin = async (req, res) => {
 
     if (localAdmin.verificationStatus === 'verified') {
       return res.status(200).send({ message: 'Already Verified' })
+    }
+
+    if (localAdmin.verificationStatus === 'rejected') {
+      return res.status(200).send({ message: 'Already Rejected' })
     }
 
     const updateLocalAdmin = await LocalAdmins.updateOne({ _id: localAdminId }, { verificationStatus: 'rejected' })

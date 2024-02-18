@@ -154,6 +154,10 @@ export const rejectTeacher = async (req, res) => {
       return res.status(200).send({ message: 'Already Verified' })
     }
 
+    if (teacher.verificationStatus === 'rejected') {
+      return res.status(200).send({ message: 'Already Rejected' })
+    }
+
     const updateTeacher = await Teachers.updateOne({ _id: teacherId }, { verificationStatus: 'rejected' })
     if (!updateTeacher) {
       return res.status(500).send({ message: 'Internal Server Error' })
