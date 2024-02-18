@@ -124,11 +124,11 @@ export const verifyTeacher = async (req, res) => {
       return res.status(404).send({ message: 'Teacher Not Found' })
     }
 
-    if (teacher.verificationStatus === true) {
+    if (teacher.verificationStatus === 'verified') {
       return res.status(200).send({ message: 'Already Verified' })
     }
 
-    const updateTeacher = await Teachers.updateOne({ _id: teacherId }, { verificationStatus: true })
+    const updateTeacher = await Teachers.updateOne({ _id: teacherId }, { verificationStatus: 'verified' })
     if (!updateTeacher) {
       return res.status(500).send({ message: 'Internal Server Error' })
     }
@@ -137,6 +137,31 @@ export const verifyTeacher = async (req, res) => {
   } catch (err) {
     console.log(err)
     res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const rejectTeacher = async (req, res) => {
+  const teacherId = req.params.teacherId
+
+  try {
+    const teacher = await Teachers.findOne({ _id: teacherId })
+
+    if (!teacher) {
+      return res.status(404).send({ message: 'Teacher Not Found' })
+    }
+
+    if (teacher.verificationStatus === 'verified') {
+      return res.status(200).send({ message: 'Already Verified' })
+    }
+
+    const updateTeacher = await Teachers.updateOne({ _id: teacherId }, { verificationStatus: 'rejected' })
+    if (!updateTeacher) {
+      return res.status(500).send({ message: 'Internal Server Error' })
+    }
+    res.status(200).send({ message: 'Teacher Application Rejected' })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
 

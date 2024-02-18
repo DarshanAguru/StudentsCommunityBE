@@ -1,6 +1,6 @@
 import express from 'express'
 import { verifyToken } from '../utils/jwt.js'
-import { login, register, logout, verifyLocalAdmin, verifyMentor, getAllMentors, getAllLocalAdmins } from '../Controllers/GlobalAdminController.js'
+import { login, register, logout, verifyLocalAdmin, verifyMentor, getAllMentors, getAllLocalAdmins, rejectLocalAdmin, rejectMentor } from '../Controllers/GlobalAdminController.js'
 
 const GlobalAdminRouter = express.Router()
 
@@ -12,6 +12,8 @@ GlobalAdminRouter.post('/register', register)
 GlobalAdminRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
 GlobalAdminRouter.post('/verifyMentor/:id', verifyToken, verifyMentor)
 GlobalAdminRouter.post('/verifyLocalAdmin/:id', verifyToken, verifyLocalAdmin)
+GlobalAdminRouter.post('/rejectLocalAdmin/:id', verifyToken, rejectLocalAdmin)
+GlobalAdminRouter.post('/rejectMentor/:id', verifyToken, rejectMentor)
 GlobalAdminRouter.post('/getAllMentors', verifyToken, getAllMentors)
 GlobalAdminRouter.post('/getAllLocalAdmins', verifyToken, getAllLocalAdmins)
 

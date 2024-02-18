@@ -114,11 +114,11 @@ export const verifyMentor = async (req, res) => {
       return res.status(404).send({ message: 'Mentor Not Found' })
     }
 
-    if (mentor.verificationStatus === true) {
+    if (mentor.verificationStatus === 'verified') {
       return res.status(200).send({ message: 'Already Verified' })
     }
 
-    const updateMentor = await Mentors.updateOne({ _id: mentorId }, { verificationStatus: true })
+    const updateMentor = await Mentors.updateOne({ _id: mentorId }, { verificationStatus: 'verified' })
     if (!updateMentor) {
       return res.status(500).send({ message: 'Internal Server Error' })
     }
@@ -140,11 +140,11 @@ export const verifyLocalAdmin = async (req, res) => {
       return res.status(404).send({ message: 'Local Admin Not Found' })
     }
 
-    if (localAdmin.verificationStatus === true) {
+    if (localAdmin.verificationStatus === 'verified') {
       return res.status(200).send({ message: 'Already Verified' })
     }
 
-    const updateLocalAdmin = await LocalAdmins.updateOne({ _id: localAdminId }, { verificationStatus: true })
+    const updateLocalAdmin = await LocalAdmins.updateOne({ _id: localAdminId }, { verificationStatus: 'verified' })
     if (!updateLocalAdmin) {
       return res.status(500).send({ message: 'Internal Server Error' })
     }
@@ -176,6 +176,56 @@ export const getAllMentors = async (req, res) => {
       return res.status(404).send({ message: 'Not Found' })
     }
     res.status(200).send(mentors)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const rejectMentor = async (req, res) => {
+  const mentorId = req.params.mentorId
+
+  try {
+    const mentors = await Mentors.findOne({ _id: mentorId })
+
+    if (!mentors) {
+      return res.status(404).send({ message: 'Mentor Not Found' })
+    }
+
+    if (mentors.verificationStatus === 'verified') {
+      return res.status(200).send({ message: 'Already Verified' })
+    }
+
+    const updateMentor = await Mentors.updateOne({ _id: mentorId }, { verificationStatus: 'rejected' })
+    if (!updateMentor) {
+      return res.status(500).send({ message: 'Internal Server Error' })
+    }
+    res.status(200).send({ message: 'Mentor Application Rejected' })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const rejectLocalAdmin = async (req, res) => {
+  const localAdminId = req.params.localAdminId
+
+  try {
+    const localAdmin = await LocalAdmins.findOne({ _id: localAdminId })
+
+    if (!localAdmin) {
+      return res.status(404).send({ message: 'LocalAdmin Not Found' })
+    }
+
+    if (localAdmin.verificationStatus === 'verified') {
+      return res.status(200).send({ message: 'Already Verified' })
+    }
+
+    const updateLocalAdmin = await LocalAdmins.updateOne({ _id: localAdminId }, { verificationStatus: 'rejected' })
+    if (!updateLocalAdmin) {
+      return res.status(500).send({ message: 'Internal Server Error' })
+    }
+    res.status(200).send({ message: 'Local Admin Application Rejected' })
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
