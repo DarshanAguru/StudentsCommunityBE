@@ -1,6 +1,5 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
-import cookieParser from 'cookie-parser'
 import express from 'express'
 import mongoose from 'mongoose'
 import StudentRouter from './Routes/StudentsRoutes.js'
@@ -33,7 +32,6 @@ app.use(cors(
   }
 ))
 // app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser())
 
 const port = process.env.PORT || 9000
 
