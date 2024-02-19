@@ -26,10 +26,10 @@ try {
 
 app.use(cors(
   {
-    origin: ['*'],
-    methods: ['GET', 'POST', 'DELETE']
-    // "credentials": true,
-    // "optionsSuccessStatus": 204
+    origin: ['http://localhost:5173'],
+    methods: ['GET', 'POST', 'DELETE'],
+    credentials: true,
+    optionsSuccessStatus: 204
   }
 ))
 // app.use(express.urlencoded({ extended: false }));

@@ -20,21 +20,12 @@ export const login = async (req, res) => {
       return res.status(401).send({ message: 'Not authorized' })
     }
 
-    const expTimeCookies = 60 * 60 * 24 * 1000 // expiration time in milliseconds (1 day)
     const expTime = 60 * 60 * 24 // expiration time in seconds (1 day)
 
     // jwt token generation
     const token = jwt.sign({ userType: 'Students', userId: student._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: expTime,
       algorithm: 'HS256'
-    })
-
-    // jwt token storage
-    res.cookie('token', token, {
-      maxAge: expTimeCookies,
-      // httpOnly: true,
-      // secure: true,
-      sameSite: 'none'
     })
 
     const tag = await VerificationTag.findOneAndUpdate({ userId: student._id }, {
@@ -50,7 +41,7 @@ export const login = async (req, res) => {
       return res.stauts(500).send('Internal server Error') // server error ... Retry login
     }
 
-    const dataToSend = { ...student._doc, password: undefined, messages: undefined, assignments: undefined, created_at: undefined, updated_at: undefined, __v: undefined }
+    const dataToSend = { ...student._doc, password: undefined, messages: undefined, assignments: undefined, created_at: undefined, updated_at: undefined, __v: undefined, token }
     res.status(200).send(dataToSend) // retuning student details
   } catch (err) {
     console.log(err)
@@ -87,10 +78,7 @@ export const logout = async (req, res) => {
   const id = req.params.id
 
   try {
-    if (!req.cookies.token) {
-      return res.status(404).send({ message: 'Not Found' })
-    }
-    const token = req.cookies.token
+    const token = req.body.token
     const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY, { algorithms: ['HS256'] })
     if (decoded.userId !== id) {
       return res.status(404).send({ message: 'Not Found' })
