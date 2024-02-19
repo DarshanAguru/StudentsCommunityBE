@@ -85,7 +85,6 @@ export const logout = async (req, res) => {
     if (!data) {
       return res.status(404).send({ message: 'Not Found' })
     }
-    res.clearCookie('token')
     res.status(200).send({ message: 'Logged out Successfully!' })
   } catch (err) {
     console.log(err)
@@ -172,17 +171,13 @@ export const getAllMentors = async (req, res) => {
 }
 
 export const rejectMentor = async (req, res) => {
-  const mentorId = req.params.mentorId
+  const mentorId = req.params.id
 
   try {
     const mentors = await Mentors.findOne({ _id: mentorId })
 
     if (!mentors) {
       return res.status(404).send({ message: 'Mentor Not Found' })
-    }
-
-    if (mentors.verificationStatus === 'verified') {
-      return res.status(200).send({ message: 'Already Verified' })
     }
 
     if (mentors.verificationStatus === 'rejected') {
@@ -193,7 +188,7 @@ export const rejectMentor = async (req, res) => {
     if (!updateMentor) {
       return res.status(500).send({ message: 'Internal Server Error' })
     }
-    res.status(200).send({ message: 'Mentor Application Rejected' })
+    res.status(200).send({ message: 'Rejected' })
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
@@ -201,17 +196,13 @@ export const rejectMentor = async (req, res) => {
 }
 
 export const rejectLocalAdmin = async (req, res) => {
-  const localAdminId = req.params.localAdminId
+  const localAdminId = req.params.id
 
   try {
     const localAdmin = await LocalAdmins.findOne({ _id: localAdminId })
 
     if (!localAdmin) {
       return res.status(404).send({ message: 'LocalAdmin Not Found' })
-    }
-
-    if (localAdmin.verificationStatus === 'verified') {
-      return res.status(200).send({ message: 'Already Verified' })
     }
 
     if (localAdmin.verificationStatus === 'rejected') {
@@ -222,7 +213,7 @@ export const rejectLocalAdmin = async (req, res) => {
     if (!updateLocalAdmin) {
       return res.status(500).send({ message: 'Internal Server Error' })
     }
-    res.status(200).send({ message: 'Local Admin Application Rejected' })
+    res.status(200).send({ message: 'Rejected' })
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })

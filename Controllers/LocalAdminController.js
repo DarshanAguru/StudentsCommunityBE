@@ -94,7 +94,6 @@ export const logout = async (req, res) => {
     if (!data) {
       return res.status(404).send({ message: 'Not Found' })
     }
-    res.clearCookie('token')
     res.status(200).send({ message: 'Logged out Successfully!' })
   } catch (err) {
     console.log(err)
@@ -136,10 +135,6 @@ export const rejectTeacher = async (req, res) => {
 
     if (!teacher) {
       return res.status(404).send({ message: 'Teacher Not Found' })
-    }
-
-    if (teacher.verificationStatus === 'verified') {
-      return res.status(200).send({ message: 'Already Verified' })
     }
 
     if (teacher.verificationStatus === 'rejected') {
