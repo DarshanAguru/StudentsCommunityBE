@@ -8,6 +8,7 @@ import MentorRouter from './Routes/MentorsRoutes.js'
 import LocalAdminRouter from './Routes/LocalAdminRoutes.js'
 import GlobalAdminRouter from './Routes/GlobalAdminRoutes.js'
 import MessagesRouter from './Routes/MessagesRoutes.js'
+import globalRouter from './Routes/globalRoutes.js'
 
 dotenv.config()
 
@@ -41,6 +42,7 @@ app.use('/mentors', MentorRouter)
 app.use('/localadmins', LocalAdminRouter)
 app.use('/globaladmins', GlobalAdminRouter)
 app.use('/messages', MessagesRouter)
+app.use('/global', globalRouter)
 
 app.listen(port, () => {
   // connect to mongodb
