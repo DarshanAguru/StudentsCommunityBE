@@ -10,7 +10,7 @@ const TeachersSchema = new Schema({
   gender: { type: String },
   password: { type: String, required: true },
   verificationStatus: { type: String, default: 'pending' },
-  description: { type: String },
+  qualification: { type: String },
   assignments: { type: [String] },
   messages: { type: [String] }
 },

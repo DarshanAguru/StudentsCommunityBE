@@ -58,7 +58,7 @@ export const login = async (req, res) => {
 }
 
 export const register = async (req, res) => {
-  const { phoneNumber, name, emailId, institution, password, age, gender, description, subjectExpertise } = req.body
+  const { phoneNumber, name, emailId, institution, password, age, gender, qualification, subjectExpertise } = req.body
   // console.log(req.body);
   const hashedPassword = await hashPassword(password)
 
@@ -71,7 +71,7 @@ export const register = async (req, res) => {
       gender,
       institution,
       password: hashedPassword,
-      description,
+      qualification,
       subjectExpertise
     })
 

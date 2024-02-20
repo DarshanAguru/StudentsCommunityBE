@@ -128,7 +128,7 @@ export const verifyTeacher = async (req, res) => {
 }
 
 export const rejectTeacher = async (req, res) => {
-  const teacherId = req.params.teacherId
+  const teacherId = req.params.id
 
   try {
     const teacher = await Teachers.findOne({ _id: teacherId })
