@@ -1,7 +1,8 @@
 import { model, Schema } from 'mongoose'
 
 const ForgotPasswordSchema = new Schema({
-  phoneNumber: { type: String, required: true, unique: true },
+  userId: { type: String, required: true, unique: true },
+  emailId: { type: String, required: true },
   type: { type: String, required: true },
   otp: { type: String, required: true }
 },
