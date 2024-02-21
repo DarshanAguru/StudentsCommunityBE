@@ -11,18 +11,19 @@ export const forgotPassword = async (req, res) => {
   const query = req.body.query
   const email = req.body.email
   const type = req.body.type
+  const phoneNo = req.body.phoneNo
   try {
     let data
     if (query === 'generateOTP') {
       // console.log(req.body)
       if (type === 'mentor') {
-        data = await Mentors.findOne({ emailId: email })
+        data = await Mentors.findOne({ phoneNumber: phoneNo, emailId: email })
       } else if (type === 'student') {
-        data = await Students.findOne({ emailId: email })
+        data = await Students.findOne({ phoneNumber: phoneNo, emailId: email })
       } else if (type === 'teacher') {
-        data = await Teachers.findOne({ emailId: email })
+        data = await Teachers.findOne({ phoneNumber: phoneNo, emailId: email })
       } else if (type === 'Admin') {
-        data = await LocalAdmins.findOne({ emailId: email })
+        data = await LocalAdmins.findOne({ phoneNumber: phoneNo, emailId: email })
       } else {
         data = null
       }
