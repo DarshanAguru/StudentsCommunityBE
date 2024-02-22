@@ -2,6 +2,7 @@ import { model, Schema } from 'mongoose'
 
 const ReplyMessages = new Schema({
   senderId: { type: String },
+  senderGender: { type: String },
   senderType: { type: String },
   senderName: { type: String },
   message: { type: String },
@@ -15,13 +16,15 @@ const ReplyMessages = new Schema({
 
 const MessagesSchema = new Schema({
   messageId: { type: String, required: true, unique: true }, // coversation id -- student , nonce, msg no 9881901973@03744
+  messageSenderName: { type: String },
+  messageSenderGender: { type: String },
   messageData: { type: String },
   imageLink: { type: String },
   tags: { type: [String] },
   school: { type: String },
   replies: { type: [ReplyMessages] },
-  upvote: { type: Number, default: 0 },
-  downvote: { type: Number, deafult: 0 }
+  upvote: { type: [String] },
+  downvote: { type: [String] }
 },
 {
   timestamps: {

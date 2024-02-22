@@ -34,6 +34,8 @@ export const addMessage = async (req, res) => {
   const messageId = req.params.id
   const school = req.body.school
   const messageData = req.body.messageData
+  const messageSenderGender = req.body.gender
+  const messageSenderName = req.body.name
   const imageLink = (req.body.imageLink) ? req.body.imageLink : undefined
   const tags = (req.body.tags) ? req.body.tags : undefined
   const studentId = req.params.id.split('@')[0]
@@ -41,6 +43,8 @@ export const addMessage = async (req, res) => {
     const message = {
       messageId,
       messageData,
+      messageSenderGender,
+      messageSenderName,
       imageLink,
       tags,
       school
@@ -70,7 +74,7 @@ export const addMessage = async (req, res) => {
 
 export const addReply = async (req, res) => {
   const messageId = req.params.id
-  const { senderId, senderType, senderName, message } = req.body
+  const { senderId, senderType, senderName, message, senderGender } = req.body
   const imageLink = (req.body.imageLink) ? req.body.imageLink : undefined
   try {
     const messageThread = await Messages.findOne({ messageId })
@@ -82,11 +86,12 @@ export const addReply = async (req, res) => {
       senderId,
       senderType,
       senderName,
+      senderGender,
       message,
       imageLink
     }
 
-    if (senderType === 'Teacher') {
+    if (senderType === 'teachers') {
       const teacher = await Teachers.findOne({ _id: senderId })
       if (!teacher) {
         return res.status(404).send({ message: 'Not Found' })
@@ -99,7 +104,7 @@ export const addReply = async (req, res) => {
         await teacher.save()
       }
     }
-    if (senderType === 'Student') {
+    if (senderType === 'students') {
       const student = await Students.findOne({ _id: senderId })
       if (!student) {
         return res.status(404).send({ message: 'Not Found' })
@@ -112,7 +117,7 @@ export const addReply = async (req, res) => {
         await student.save()
       }
     }
-    if (senderType === 'Mentor') {
+    if (senderType === 'mentors') {
       const mentor = await Mentors.findOne({ _id: senderId })
       if (!mentor) {
         return res.status(404).send({ message: 'Not Found' })
@@ -151,15 +156,28 @@ export const getAllMessagesBySchool = async (req, res) => {
 
 export const upvote = async (req, res) => {
   const messageId = req.params.id
+  const userId = req.body.userId
   try {
     const messageThread = await Messages.findOne({ messageId })
     if (!messageThread) {
       return res.status(404).send({ message: 'Not Found' })
     }
-    const upvotecount = messageThread.upvote + 1
-    messageThread.upvote = messageThread.upvote + 1
-    await messageThread.save()
-    res.status(200).send({ upvotecount })
+    if (messageThread.upvote.length === 0) {
+      messageThread.upvote.push(userId)
+    } else {
+      if (messageThread.upvote.find(userId)) {
+        return res.status(400).send({ message: 'Already Voted' })
+      } else {
+        messageThread.upvote.push(userId)
+      }
+    }
+    if ((messageThread.downvote.length > 0) && (messageThread.downvote.find(userId) !== undefined)) {
+      const newArr = messageThread.downvote.filter(user => user !== userId)
+      messageThread.downvote = newArr
+    }
+    const len = messageThread.upvote.length
+    await messageThread.save({ len })
+    res.status(200).send({})
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
@@ -168,15 +186,28 @@ export const upvote = async (req, res) => {
 
 export const downvote = async (req, res) => {
   const messageId = req.params.id
+  const userId = req.body.userId
   try {
     const messageThread = await Messages.findOne({ messageId })
     if (!messageThread) {
       return res.status(404).send({ message: 'Not Found' })
     }
-    const downvotecount = messageThread.downvote + 1
-    messageThread.downvote = messageThread.downvote + 1
+    if (messageThread.downvote.length === 0) {
+      messageThread.downvote.push(userId)
+    } else {
+      if (messageThread.downvote.find(userId)) {
+        return res.status(400).send({ message: 'Already Voted' })
+      } else {
+        messageThread.downvote.push(userId)
+      }
+    }
+    if ((messageThread.upvote.length > 0) && (messageThread.upvote.find(userId) !== undefined)) {
+      const newArr = messageThread.upvote.filter(user => user !== userId)
+      messageThread.upvote = newArr
+    }
+    const len = messageThread.downvote.length
     await messageThread.save()
-    res.status(200).send({ downvotecount })
+    res.status(200).send({ len })
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
