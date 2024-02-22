@@ -148,3 +148,37 @@ export const getAllMessagesBySchool = async (req, res) => {
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
+
+export const upvote = async (req, res) => {
+  const messageId = req.params.id
+  try {
+    const messageThread = await Messages.findOne({ messageId })
+    if (!messageThread) {
+      return res.status(404).send({ message: 'Not Found' })
+    }
+    const upvotecount = messageThread.upvote + 1
+    messageThread.upvote = messageThread.upvote + 1
+    await messageThread.save()
+    res.status(200).send({ upvotecount })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const downvote = async (req, res) => {
+  const messageId = req.params.id
+  try {
+    const messageThread = await Messages.findOne({ messageId })
+    if (!messageThread) {
+      return res.status(404).send({ message: 'Not Found' })
+    }
+    const downvotecount = messageThread.downvote + 1
+    messageThread.downvote = messageThread.downvote + 1
+    await messageThread.save()
+    res.status(200).send({ downvotecount })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}

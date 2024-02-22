@@ -22,7 +22,7 @@ export const forgotPassword = async (req, res) => {
         data = await Students.findOne({ phoneNumber: phoneNo, emailId: email })
       } else if (type === 'teacher') {
         data = await Teachers.findOne({ phoneNumber: phoneNo, emailId: email })
-      } else if (type === 'Admin') {
+      } else if (type === 'organisation') {
         data = await LocalAdmins.findOne({ phoneNumber: phoneNo, emailId: email })
       } else {
         data = null
@@ -84,7 +84,7 @@ export const forgotPassword = async (req, res) => {
         data = await Students.findOneAndUpdate({ _id: userId }, { password: hashedPassword })
       } else if (type === 'teacher') {
         data = await Teachers.findOneAndUpdate({ _id: userId }, { password: hashedPassword })
-      } else if (type === 'Admin') {
+      } else if (type === 'organisation') {
         data = await LocalAdmins.findOneAndUpdate({ _id: userId }, { password: hashedPassword })
       } else {
         data = null

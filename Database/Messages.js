@@ -19,7 +19,9 @@ const MessagesSchema = new Schema({
   imageLink: { type: String },
   tags: { type: [String] },
   school: { type: String },
-  replies: { type: [ReplyMessages] }
+  replies: { type: [ReplyMessages] },
+  upvote: { type: Number, default: 0 },
+  downvote: { type: Number, deafult: 0 }
 },
 {
   timestamps: {
