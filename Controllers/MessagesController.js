@@ -165,13 +165,13 @@ export const upvote = async (req, res) => {
     if (messageThread.upvote.length === 0) {
       messageThread.upvote.push(userId)
     } else {
-      if (messageThread.upvote.find(userId)) {
+      if (messageThread.upvote.includes(userId)) {
         return res.status(400).send({ message: 'Already Voted' })
       } else {
         messageThread.upvote.push(userId)
       }
     }
-    if ((messageThread.downvote.length > 0) && (messageThread.downvote.find(userId) !== undefined)) {
+    if ((messageThread.downvote.length > 0) && (messageThread.downvote.includes(userId))) {
       const newArr = messageThread.downvote.filter(user => user !== userId)
       messageThread.downvote = newArr
     }
@@ -195,13 +195,13 @@ export const downvote = async (req, res) => {
     if (messageThread.downvote.length === 0) {
       messageThread.downvote.push(userId)
     } else {
-      if (messageThread.downvote.find(userId)) {
+      if (messageThread.downvote.includes(userId)) {
         return res.status(400).send({ message: 'Already Voted' })
       } else {
         messageThread.downvote.push(userId)
       }
     }
-    if ((messageThread.upvote.length > 0) && (messageThread.upvote.find(userId) !== undefined)) {
+    if ((messageThread.upvote.length > 0) && (messageThread.upvote.includes(userId))) {
       const newArr = messageThread.upvote.filter(user => user !== userId)
       messageThread.upvote = newArr
     }
