@@ -166,7 +166,8 @@ export const upvote = async (req, res) => {
       messageThread.upvote.push(userId)
     } else {
       if (messageThread.upvote.includes(userId)) {
-        return res.status(400).send({ message: 'Already Voted' })
+        const newArrUpVote = messageThread.upvote.filter(user => user !== userId)
+        messageThread.upvote = newArrUpVote
       } else {
         messageThread.upvote.push(userId)
       }
@@ -176,8 +177,8 @@ export const upvote = async (req, res) => {
       messageThread.downvote = newArr
     }
     const len = messageThread.upvote.length
-    await messageThread.save({ len })
-    res.status(200).send({})
+    await messageThread.save()
+    res.status(200).send({ len })
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
@@ -196,7 +197,8 @@ export const downvote = async (req, res) => {
       messageThread.downvote.push(userId)
     } else {
       if (messageThread.downvote.includes(userId)) {
-        return res.status(400).send({ message: 'Already Voted' })
+        const newArrDownVote = messageThread.downvote.filter(user => user !== userId)
+        messageThread.downvote = newArrDownVote
       } else {
         messageThread.downvote.push(userId)
       }

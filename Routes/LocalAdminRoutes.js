@@ -9,7 +9,7 @@ LocalAdminRouter.post('/login', login)
 LocalAdminRouter.post('/register', register)
 
 // requires Login and jwt middleware
-LocalAdminRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
+// LocalAdminRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
 LocalAdminRouter.post('/verifyTeacher/:id', verifyToken, verifyTeacher)
 LocalAdminRouter.post('/rejectTeacher/:id', verifyToken, rejectTeacher)
 LocalAdminRouter.post('/getTeachers', verifyToken, getTeachersBySchool)

@@ -12,7 +12,7 @@ TeacherRouter.post('/register', register)
 TeacherRouter.get('/getAllSchools', getAllSchools)
 
 // requires Login and jwt middleware
-TeacherRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
+// TeacherRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
 TeacherRouter.post('/postassignment/:id', verifyToken, postAssigment)
 TeacherRouter.post('/getAllassignments', verifyToken, getAllassignmentsBySchoolAndGrade)
 TeacherRouter.post('/getAllStudents', verifyToken, getStudentsBySchool)
