@@ -27,7 +27,7 @@ try {
 app.use(cors(
   {
     origin: ['http://localhost:5173'],
-    methods: ['GET', 'POST', 'DELETE'],
+    methods: ['GET', 'POST'],
     credentials: true,
     optionsSuccessStatus: 204
   }
