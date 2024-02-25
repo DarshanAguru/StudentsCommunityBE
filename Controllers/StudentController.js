@@ -75,7 +75,7 @@ export const register = async (req, res) => {
   }
 }
 
-export const editDetials = async (req, res) => {
+export const editDetails = async (req, res) => {
   const studentId = req.params.id
   const { name, age, school, grade } = req.body
   try {

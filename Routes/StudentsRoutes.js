@@ -1,6 +1,6 @@
 import express from 'express'
 import { verifyToken } from '../utils/jwt.js'
-import { login, register, logout, submitAssigment, getAllMessagesOfStudent, getAllSchools, getAllassignmentsBySchoolAndGradeAndSubject, clearNotification, getAllNotifications, editDetials } from '../Controllers/StudentController.js'
+import { login, register, logout, submitAssigment, getAllMessagesOfStudent, getAllSchools, getAllassignmentsBySchoolAndGradeAndSubject, clearNotification, getAllNotifications, editDetails } from '../Controllers/StudentController.js'
 
 const StudentRouter = express.Router()
 
@@ -10,7 +10,7 @@ StudentRouter.post('/register', register)
 
 // requires Login and jwt middleware
 // StudentRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
-StudentRouter.post('/editDetials/:id', verifyToken, editDetials)
+StudentRouter.post('/editDetails/:id', verifyToken, editDetails)
 StudentRouter.post('/submitassignment/:id', verifyToken, submitAssigment)
 StudentRouter.post('/getallassignments', verifyToken, getAllassignmentsBySchoolAndGradeAndSubject)
 StudentRouter.post('/getmessages/:id', verifyToken, getAllMessagesOfStudent)
