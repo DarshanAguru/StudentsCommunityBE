@@ -88,7 +88,7 @@ export const logout = async (req, res) => {
     res.status(200).send({ message: 'Logged out Successfully!' })
   } catch (err) {
     console.log(err)
-    res.status(500).send({ meaasge: 'Internal Server Error' }) // Internal Server Error
+    res.status(500).send({ message: 'Internal Server Error' }) // Internal Server Error
   }
 }
 

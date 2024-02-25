@@ -1,6 +1,6 @@
 import express from 'express'
 import { verifyToken } from '../utils/jwt.js'
-import { login, register, logout, postAssigment, getStudentsBySchool, getAllAssignmentsOfTeacher, getAllSchools, addPointsToAssignment, getAllassignmentsBySchoolAndGradeAndSubject, getAllNotifications, clearNotification, editDetails } from '../Controllers/TeachersController.js'
+import { login, register, logout, postAssignment, getStudentsBySchool, getAllAssignmentsOfTeacher, getAllSchools, addPointsToAssignment, getAllAssignmentsBySchoolAndGradeAndSubject, getAllNotifications, clearNotification, editDetails } from '../Controllers/TeachersController.js'
 
 const TeacherRouter = express.Router()
 
@@ -13,8 +13,8 @@ TeacherRouter.post('/register', register)
 // requires Login and jwt middleware
 // TeacherRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
 TeacherRouter.post('/editDetails/:id', verifyToken, editDetails)
-TeacherRouter.post('/postassignment/:id', verifyToken, postAssigment)
-TeacherRouter.post('/getAllassignments', verifyToken, getAllassignmentsBySchoolAndGradeAndSubject)
+TeacherRouter.post('/postassignment/:id', verifyToken, postAssignment)
+TeacherRouter.post('/getAllassignments', verifyToken, getAllAssignmentsBySchoolAndGradeAndSubject)
 TeacherRouter.post('/getAllStudents', verifyToken, getStudentsBySchool)
 TeacherRouter.post('/getassignments/:id', verifyToken, getAllAssignmentsOfTeacher)
 TeacherRouter.post('/addPointsToAssignment/:id', verifyToken, addPointsToAssignment)

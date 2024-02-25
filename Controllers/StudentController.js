@@ -39,7 +39,7 @@ export const login = async (req, res) => {
 
     if (!tag) {
       console.log('Error')
-      return res.stauts(500).send('Internal server Error') // server error ... Retry login
+      return res.status(500).send('Internal server Error') // server error ... Retry login
     }
 
     const dataToSend = { ...student._doc, password: undefined, messages: undefined, assignments: undefined, created_at: undefined, updated_at: undefined, __v: undefined, token }
@@ -131,7 +131,7 @@ export const getAllMessagesOfStudent = async (req, res) => {
   }
 }
 
-export const submitAssigment = async (req, res) => {
+export const submitAssignment = async (req, res) => {
   const assignmentId = req.params.id
   const { senderId, senderName, message } = req.body
   const imageLink = (req.body.imageLink) ? req.body.imageLink : undefined
@@ -178,7 +178,7 @@ export const submitAssigment = async (req, res) => {
   }
 }
 
-export const getAllassignmentsBySchoolAndGradeAndSubject = async (req, res) => {
+export const getAllAssignmentsBySchoolAndGradeAndSubject = async (req, res) => {
   const school = req.body.school
   const grade = req.body.grade
   const subject = req.body.subject
