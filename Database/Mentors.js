@@ -3,7 +3,7 @@ import { model, Schema } from 'mongoose'
 const MentorsSchema = new Schema({
   phoneNumber: { type: String, required: true, unique: true },
   name: { type: String, required: true },
-  emailId: { type: String, reuqired: true },
+  emailId: { type: String, required: true },
   qualification: { type: String, required: true },
   subjectExpertise: { type: [String], required: true },
   resumeLink: { type: String, required: true },

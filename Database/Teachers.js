@@ -13,7 +13,7 @@ const NotificationSchema = new Schema({
 const TeachersSchema = new Schema({
   phoneNumber: { type: String, required: true, unique: true },
   name: { type: String, required: true },
-  emailId: { type: String, reuqired: true },
+  emailId: { type: String, required: true },
   subjectExpertise: { type: [String], required: true },
   institution: { type: String, required: true },
   age: { type: Number },
