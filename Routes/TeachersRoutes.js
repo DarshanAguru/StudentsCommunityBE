@@ -9,7 +9,6 @@ TeacherRouter.post('/login', login)
 TeacherRouter.post('/register', register)
 
 // get methods
-TeacherRouter.get('/getAllSchools', getAllSchools)
 
 // requires Login and jwt middleware
 // TeacherRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
@@ -22,6 +21,7 @@ TeacherRouter.post('/getAllNotifications/:id', verifyToken, getAllNotifications)
 TeacherRouter.post('/clearNotification/:id', verifyToken, clearNotification)
 
 // requires logged in
+TeacherRouter.post('/getAllSchools', getAllSchools)
 TeacherRouter.post('/logout/:id', logout)
 
 export default TeacherRouter

@@ -8,9 +8,6 @@ const StudentRouter = express.Router()
 StudentRouter.post('/login', login)
 StudentRouter.post('/register', register)
 
-// get methods
-StudentRouter.get('/getAllSchools', getAllSchools)
-
 // requires Login and jwt middleware
 // StudentRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
 StudentRouter.post('/submitassignment/:id', verifyToken, submitAssigment)
@@ -20,6 +17,7 @@ StudentRouter.post('/getAllNotifications/:id', verifyToken, getAllNotifications)
 StudentRouter.post('/clearNotification/:id', verifyToken, clearNotification)
 
 // requires logged in
+StudentRouter.post('/getAllSchools', getAllSchools)
 StudentRouter.post('/logout/:id', logout)
 
 export default StudentRouter
