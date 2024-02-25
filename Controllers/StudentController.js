@@ -75,6 +75,21 @@ export const register = async (req, res) => {
   }
 }
 
+export const editDetials = async (req, res) => {
+  const studentId = req.params.id
+  const { name, age, school, grade } = req.body
+  try {
+    const student = await Students.findOneAndUpdate({ _id: studentId }, { name, age, school, grade })
+    if (!student) {
+      return res.status(404).send({ message: 'Student not found' })
+    }
+    await student.save()
+    res.status(200).send({ message: 'Success' })
+  } catch (err) {
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
 export const logout = async (req, res) => {
   const id = req.params.id
 
