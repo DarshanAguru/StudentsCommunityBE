@@ -5,6 +5,7 @@ import { hashPassword, verifyPass } from '../utils/passwordVerifyAndHash.js'
 import { Assignments } from '../Database/Assignments.js'
 import { Messages } from '../Database/Messages.js'
 import { LocalAdmins } from '../Database/LocalAdmin.js'
+import { Teachers } from '../Database/Teachers.js'
 
 export const login = async (req, res) => {
   const { phoneNumber, password } = req.body // taking post parameters from request
@@ -144,6 +145,15 @@ export const submitAssigment = async (req, res) => {
       student.assignments.push(assignmentId)
       await student.save()
     }
+
+    const teacherId = assignmentId.split('@')[0]
+    const teacher = await Teachers.findOne({ _id: teacherId })
+    if (!teacher) {
+      return res.status(500).send({ message: 'Internal Server Error' })
+    }
+
+    teacher.notifications.push({ senderId, senderName, notificationType: 'Assignment Submit', createdAt: new Date().toLocaleString() })
+    await teacher.save()
     assignment.submissions.push(newSubmission)
     await assignment.save()
     res.status(201).send({ message: 'Assignment Submitted' })
@@ -153,11 +163,12 @@ export const submitAssigment = async (req, res) => {
   }
 }
 
-export const getAllassignmentsBySchoolAndGrade = async (req, res) => {
+export const getAllassignmentsBySchoolAndGradeAndSubject = async (req, res) => {
   const school = req.body.school
   const grade = req.body.grade
+  const subject = req.body.subject
   try {
-    const assignments = await Assignments.find({ school, grade })
+    const assignments = await Assignments.find({ school, grade, subject })
     if (!assignments) {
       return res.status(404).send({ message: 'Not Found' })
     }
@@ -177,6 +188,37 @@ export const getAllSchools = async (req, res) => {
     res.status(200).send(schools)
   } catch (err) {
     console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const getAllNotifications = async (req, res) => {
+  const studentId = req.params.id
+  try {
+    const student = await Students.findOne({ _id: studentId })
+    if (!student) {
+      return res.status(404).send({ message: 'Student not found' })
+    }
+    const notifications = student.notifications
+    return res.status(200).send(notifications)
+  } catch (err) {
+    res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const clearNotification = async (req, res) => {
+  const studentId = req.params.id
+  const notifId = req.body.id
+  try {
+    const student = await Students.findOne({ _id: studentId })
+    if (!student) {
+      return res.status(404).send({ message: 'Student not found' })
+    }
+    const notifArr = student.notifications.filter(notif => notif.userId !== notifId)
+    student.notifications = notifArr
+    await student.save()
+    res.status(200).send({ message: 'Success' })
+  } catch (err) {
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }

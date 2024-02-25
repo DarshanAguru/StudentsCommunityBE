@@ -131,6 +131,13 @@ export const addReply = async (req, res) => {
       }
     }
 
+    const studentId = messageId.split('@')[0]
+    const studentData = await Students.findOne({ _id: studentId })
+    if (!studentData) {
+      return res.status(500).send({ message: 'Internal Server Error' })
+    }
+    studentData.notifications.push({ userId: senderId, userName: senderName, notificationType: 'Reply', createdAt: new Date().toLocaleString() })
+    await studentData.save()
     messageThread.replies.push(newReply)
     await messageThread.save()
     res.status(201).send({ message: 'Reply added' })

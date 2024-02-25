@@ -1,5 +1,15 @@
 import { model, Schema } from 'mongoose'
 
+const NotificationSchema = new Schema({
+  userId: { type: String },
+  userName: { type: String },
+  notificationType: { type: String },
+  createdAt: { type: String }
+},
+{
+  timestamps: false
+})
+
 const StudentSchema = new Schema({
   phoneNumber: { type: String, required: true, unique: true },
   name: { type: String, required: true },
@@ -10,7 +20,8 @@ const StudentSchema = new Schema({
   gender: { type: String },
   password: { type: String, required: true },
   assignments: { type: [String] },
-  messages: { type: [String] }
+  messages: { type: [String] },
+  notifications: { type: [NotificationSchema] }
 },
 {
   timestamps: {

@@ -4,7 +4,8 @@ const AssignmentSubmissions = new Schema({
   senderId: { type: String },
   senderName: { type: String },
   message: { type: String },
-  imageLink: { type: String }
+  imageLink: { type: String },
+  points: { type: String, default: 'Pending' }
 },
 {
   timestamps: {
@@ -20,6 +21,7 @@ const AssignmentsSchema = new Schema({
   deadline: { type: Date },
   school: { type: String },
   grade: { type: String },
+  subject: { type: String },
   submissions: { type: [AssignmentSubmissions] }
 },
 {

@@ -1,6 +1,6 @@
 import express from 'express'
 import { verifyToken } from '../utils/jwt.js'
-import { login, register, logout, postAssigment, getAllassignmentsBySchoolAndGrade, getStudentsBySchool, getAllAssignmentsOfTeacher, getAllSchools } from '../Controllers/TeachersController.js'
+import { login, register, logout, postAssigment, getStudentsBySchool, getAllAssignmentsOfTeacher, getAllSchools, addPointsToAssignment, getAllassignmentsBySchoolAndGradeAndSubject, getAllNotifications, clearNotification } from '../Controllers/TeachersController.js'
 
 const TeacherRouter = express.Router()
 
@@ -14,9 +14,12 @@ TeacherRouter.get('/getAllSchools', getAllSchools)
 // requires Login and jwt middleware
 // TeacherRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
 TeacherRouter.post('/postassignment/:id', verifyToken, postAssigment)
-TeacherRouter.post('/getAllassignments', verifyToken, getAllassignmentsBySchoolAndGrade)
+TeacherRouter.post('/getAllassignments', verifyToken, getAllassignmentsBySchoolAndGradeAndSubject)
 TeacherRouter.post('/getAllStudents', verifyToken, getStudentsBySchool)
 TeacherRouter.post('/getassignments/:id', verifyToken, getAllAssignmentsOfTeacher)
+TeacherRouter.post('/addPointsToAssignment/:id', verifyToken, addPointsToAssignment)
+TeacherRouter.post('/getAllNotifications/:id', verifyToken, getAllNotifications)
+TeacherRouter.post('/clearNotification/:id', verifyToken, clearNotification)
 
 // requires logged in
 TeacherRouter.post('/logout/:id', logout)

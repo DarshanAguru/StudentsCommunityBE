@@ -105,7 +105,7 @@ export const logout = async (req, res) => {
 
 export const postAssigment = async (req, res) => {
   const assignmentId = req.params.id
-  const { assignmentData, publishDate, school, grade, deadline } = req.body
+  const { assignmentData, publishDate, school, grade, deadline, subject } = req.body
   const imageLink = (req.body.imageLink) ? req.body.imageLink : undefined
   const teacherId = req.params.id.split('@')[0]
   try {
@@ -116,6 +116,7 @@ export const postAssigment = async (req, res) => {
       deadline,
       imageLink,
       grade,
+      subject,
       school
     }
 
@@ -132,6 +133,17 @@ export const postAssigment = async (req, res) => {
       await teacher.save()
     }
 
+    const students = await Students.find({ school, grade })
+    if (!students) {
+      return res.status(500).send({ message: 'Internal Server Error' })
+    }
+
+    for (let i = 0; i < students.length; i++) {
+      const student = students[i]
+      student.notifications.push({ userId: teacherId, userName: teacher.name, notificationType: 'Assignment', createdAt: new Date().toLocaleString() })
+      await student.save()
+    }
+
     await assignmentSave.save()
     res.status(201).send({ message: 'Assignment Saved' })
   } catch (err) {
@@ -140,11 +152,12 @@ export const postAssigment = async (req, res) => {
   }
 }
 
-export const getAllassignmentsBySchoolAndGrade = async (req, res) => {
+export const getAllassignmentsBySchoolAndGradeAndSubject = async (req, res) => {
   const school = req.body.school
   const grade = req.body.grade
+  const subject = req.body.subject
   try {
-    const assignments = await Assignments.find({ school, grade })
+    const assignments = await Assignments.find({ school, grade, subject })
     if (!assignments) {
       return res.status(404).send({ message: 'Not Found' })
     }
@@ -199,6 +212,60 @@ export const getAllSchools = async (req, res) => {
     res.status(200).send(schools)
   } catch (err) {
     console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const addPointsToAssignment = async (req, res) => {
+  const assignmentId = req.params.id
+  const senderId = req.body.id
+  const points = req.body.points
+  try {
+    const assignmentThread = await Assignments.findOne({ assignmentId })
+    if (!assignmentThread) {
+      return res.status(404).send({ message: 'Assignment not found' })
+    }
+
+    const submitedAssign = assignmentThread.submissions.filter(assignSub => assignSub.senderId === senderId)
+    submitedAssign.points = points
+    const allAssigns = assignmentThread.submissions.filter(assignSub => assignSub.senderId !== senderId)
+    allAssigns.push(submitedAssign)
+    assignmentThread.submissions = allAssigns
+    await assignmentThread.save()
+    return res.status(200).send({ message: 'Success' })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const getAllNotifications = async (req, res) => {
+  const teacherId = req.params.id
+  try {
+    const teacher = await Students.findOne({ _id: teacherId })
+    if (!teacher) {
+      return res.status(404).send({ message: 'Teacher not found' })
+    }
+    const notifications = teacher.notifications
+    return res.status(200).send(notifications)
+  } catch (err) {
+    res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const clearNotification = async (req, res) => {
+  const teacherId = req.params.id
+  const notifId = req.body.id
+  try {
+    const teacher = await Teachers.findOne({ _id: teacherId })
+    if (!teacher) {
+      return res.status(404).send({ message: 'Teacher not found' })
+    }
+    const notifArr = teacher.notifications.filter(notif => notif.userId !== notifId)
+    teacher.notifications = notifArr
+    await teacher.save()
+    res.status(200).send({ message: 'Success' })
+  } catch (err) {
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
