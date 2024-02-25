@@ -2,6 +2,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import mongoose from 'mongoose'
+import * as limiter from 'express-rate-limit'
 import StudentRouter from './Routes/StudentsRoutes.js'
 import TeacherRouter from './Routes/TeachersRoutes.js'
 import MentorRouter from './Routes/MentorsRoutes.js'
@@ -23,6 +24,13 @@ try {
 } catch (e) {
   console.log(e)
 }
+
+const rateLimit = limiter.rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200
+})
+
+app.use(rateLimit)
 
 app.use(cors(
   {
