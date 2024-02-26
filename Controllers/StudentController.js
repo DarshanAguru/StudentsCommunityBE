@@ -17,24 +17,29 @@ export const login = async (req, res) => {
     }
 
     // if incorrect credentials
-    if (!await verifyPass(password, student.password)) {
+    if (!(await verifyPass(password, student.password))) {
       return res.status(401).send({ message: 'Not authorized' })
     }
 
     const expTime = 60 * 60 * 24 // expiration time in seconds (1 day)
 
     // jwt token generation
-    const token = jwt.sign({ userType: 'Students', userId: student._id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: expTime,
-      algorithm: 'HS256'
-    })
+    const token = jwt.sign(
+      { userType: 'Students', userId: student._id },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: expTime,
+        algorithm: 'HS256'
+      }
+    )
 
-    const tag = await VerificationTag.findOneAndUpdate({ userId: student._id }, {
-      userType: 'Students',
-      token
-    }
-    ,
-    { upsert: true, new: true }
+    const tag = await VerificationTag.findOneAndUpdate(
+      { userId: student._id },
+      {
+        userType: 'Students',
+        token
+      },
+      { upsert: true, new: true }
     )
 
     if (!tag) {
@@ -42,7 +47,16 @@ export const login = async (req, res) => {
       return res.status(500).send('Internal server Error') // server error ... Retry login
     }
 
-    const dataToSend = { ...student._doc, password: undefined, messages: undefined, assignments: undefined, created_at: undefined, updated_at: undefined, __v: undefined, token }
+    const dataToSend = {
+      ...student._doc,
+      password: undefined,
+      messages: undefined,
+      assignments: undefined,
+      created_at: undefined,
+      updated_at: undefined,
+      __v: undefined,
+      token
+    }
     res.status(200).send(dataToSend) // retuning student details
   } catch (err) {
     console.log(err)
@@ -51,7 +65,8 @@ export const login = async (req, res) => {
 }
 
 export const register = async (req, res) => {
-  const { phoneNumber, name, emailId, grade, school, age, gender, password } = req.body
+  const { phoneNumber, name, emailId, grade, school, age, gender, password } =
+    req.body
   // console.log(req.body);
   const hashedPassword = await hashPassword(password)
 
@@ -77,9 +92,12 @@ export const register = async (req, res) => {
 
 export const editDetails = async (req, res) => {
   const studentId = req.params.id
-  const { name, age, school, grade } = req.body
+  const { name, age, school, grade, gender } = req.body
   try {
-    const student = await Students.findOneAndUpdate({ _id: studentId }, { name, age, school, grade })
+    const student = await Students.findOneAndUpdate(
+      { _id: studentId },
+      { name, age, school, grade, gender }
+    )
     if (!student) {
       return res.status(404).send({ message: 'Student not found' })
     }
@@ -95,7 +113,9 @@ export const logout = async (req, res) => {
 
   try {
     const token = req.body.token
-    const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY, { algorithms: ['HS256'] })
+    const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY, {
+      algorithms: ['HS256']
+    })
     if (decoded.userId !== id) {
       return res.status(404).send({ message: 'Not Found' })
     }
@@ -134,7 +154,7 @@ export const getAllMessagesOfStudent = async (req, res) => {
 export const submitAssignment = async (req, res) => {
   const assignmentId = req.params.id
   const { senderId, senderName, message } = req.body
-  const imageLink = (req.body.imageLink) ? req.body.imageLink : undefined
+  const imageLink = req.body.imageLink ? req.body.imageLink : undefined
 
   try {
     const assignment = await Assignments.findOne({ assignmentId })
@@ -167,7 +187,12 @@ export const submitAssignment = async (req, res) => {
       return res.status(500).send({ message: 'Internal Server Error' })
     }
 
-    teacher.notifications.push({ senderId, senderName, notificationType: 'Assignment Submit', createdAt: new Date().toLocaleString() })
+    teacher.notifications.push({
+      senderId,
+      senderName,
+      notificationType: 'Assignment Submit',
+      createdAt: new Date().toLocaleString()
+    })
     await teacher.save()
     assignment.submissions.push(newSubmission)
     await assignment.save()
@@ -196,7 +221,10 @@ export const getAllAssignmentsBySchoolAndGradeAndSubject = async (req, res) => {
 
 export const getAllSchools = async (req, res) => {
   try {
-    const schools = await LocalAdmins.find({ verificationStatus: 'verified' }, 'institution')
+    const schools = await LocalAdmins.find(
+      { verificationStatus: 'verified' },
+      'institution'
+    )
     if (!schools) {
       return res.status(404).send({ message: 'Not Found' })
     }
@@ -214,7 +242,9 @@ export const getAllNotifications = async (req, res) => {
     if (!student) {
       return res.status(404).send({ message: 'Student not found' })
     }
+
     const notifications = student.notifications
+    // console.log(notifications);
     return res.status(200).send(notifications)
   } catch (err) {
     res.status(500).send({ message: 'Internal Server Error' })
@@ -223,13 +253,17 @@ export const getAllNotifications = async (req, res) => {
 
 export const clearNotification = async (req, res) => {
   const studentId = req.params.id
-  const notifId = req.body.id
+  const notifId = req.body.notifId
   try {
     const student = await Students.findOne({ _id: studentId })
     if (!student) {
       return res.status(404).send({ message: 'Student not found' })
     }
-    const notifArr = student.notifications.filter(notif => notif.userId !== notifId)
+
+    const notifArr = student.notifications.filter(
+      (notif) => notif.userId !== notifId
+    )
+    console.log(notifArr)
     student.notifications = notifArr
     await student.save()
     res.status(200).send({ message: 'Success' })

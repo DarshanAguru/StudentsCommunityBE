@@ -4,7 +4,8 @@ const NotificationSchema = new Schema({
   userId: { type: String },
   userName: { type: String },
   notificationType: { type: String },
-  createdAt: { type: String }
+  createdAt: { type: String },
+  count: { type: Number, default: 0 }
 },
 {
   timestamps: false

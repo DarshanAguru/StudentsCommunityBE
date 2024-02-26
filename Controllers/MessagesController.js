@@ -36,8 +36,8 @@ export const addMessage = async (req, res) => {
   const messageData = req.body.messageData
   const messageSenderGender = req.body.gender
   const messageSenderName = req.body.name
-  const imageLink = (req.body.imageLink) ? req.body.imageLink : undefined
-  const tags = (req.body.tags) ? req.body.tags : undefined
+  const imageLink = req.body.imageLink ? req.body.imageLink : undefined
+  const tags = req.body.tags ? req.body.tags : undefined
   const studentId = req.params.id.split('@')[0]
   try {
     const message = {
@@ -75,7 +75,7 @@ export const addMessage = async (req, res) => {
 export const addReply = async (req, res) => {
   const messageId = req.params.id
   const { senderId, senderType, senderName, message, senderGender } = req.body
-  const imageLink = (req.body.imageLink) ? req.body.imageLink : undefined
+  const imageLink = req.body.imageLink ? req.body.imageLink : undefined
   try {
     const messageThread = await Messages.findOne({ messageId })
     if (!messageThread) {
@@ -136,7 +136,30 @@ export const addReply = async (req, res) => {
     if (!studentData) {
       return res.status(500).send({ message: 'Internal Server Error' })
     }
-    studentData.notifications.push({ userId: senderId, userName: senderName, notificationType: 'Reply', createdAt: new Date().toLocaleString() })
+    if (studentData.notifications.length === 0) {
+      studentData.notifications.push({
+        userId: senderId,
+        userName: senderName,
+        notificationType: 'Reply',
+        createdAt: new Date().toLocaleString(),
+        count: 0
+      })
+    } else if (studentData.notifications.includes(senderId)) {
+      const data = studentData.notifications.find({ userId: senderId })
+      const arr = studentData.notifications.filter(notif => notif.userId !== senderId)
+      data.count = data.count + 1
+      arr.push(data)
+      studentData.notifications = arr
+    } else {
+      studentData.notifications.push({
+        userId: senderId,
+        userName: senderName,
+        notificationType: 'Reply',
+        createdAt: new Date().toLocaleString(),
+        count: 0
+      })
+    }
+
     await studentData.save()
     messageThread.replies.push(newReply)
     await messageThread.save()
@@ -173,14 +196,19 @@ export const upvote = async (req, res) => {
       messageThread.upvote.push(userId)
     } else {
       if (messageThread.upvote.includes(userId)) {
-        const newArrUpVote = messageThread.upvote.filter(user => user !== userId)
+        const newArrUpVote = messageThread.upvote.filter(
+          (user) => user !== userId
+        )
         messageThread.upvote = newArrUpVote
       } else {
         messageThread.upvote.push(userId)
       }
     }
-    if ((messageThread.downvote.length > 0) && (messageThread.downvote.includes(userId))) {
-      const newArr = messageThread.downvote.filter(user => user !== userId)
+    if (
+      messageThread.downvote.length > 0 &&
+      messageThread.downvote.includes(userId)
+    ) {
+      const newArr = messageThread.downvote.filter((user) => user !== userId)
       messageThread.downvote = newArr
     }
     const len = messageThread.upvote.length
@@ -204,14 +232,19 @@ export const downvote = async (req, res) => {
       messageThread.downvote.push(userId)
     } else {
       if (messageThread.downvote.includes(userId)) {
-        const newArrDownVote = messageThread.downvote.filter(user => user !== userId)
+        const newArrDownVote = messageThread.downvote.filter(
+          (user) => user !== userId
+        )
         messageThread.downvote = newArrDownVote
       } else {
         messageThread.downvote.push(userId)
       }
     }
-    if ((messageThread.upvote.length > 0) && (messageThread.upvote.includes(userId))) {
-      const newArr = messageThread.upvote.filter(user => user !== userId)
+    if (
+      messageThread.upvote.length > 0 &&
+      messageThread.upvote.includes(userId)
+    ) {
+      const newArr = messageThread.upvote.filter((user) => user !== userId)
       messageThread.upvote = newArr
     }
     const len = messageThread.downvote.length
