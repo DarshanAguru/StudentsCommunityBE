@@ -142,7 +142,7 @@ export const addReply = async (req, res) => {
         userName: senderName,
         notificationType: 'Reply',
         createdAt: new Date().toLocaleString(),
-        count: 0
+        count: 1
       })
     } else if (studentData.notifications.includes(senderId)) {
       const data = studentData.notifications.find({ userId: senderId })
@@ -156,7 +156,7 @@ export const addReply = async (req, res) => {
         userName: senderName,
         notificationType: 'Reply',
         createdAt: new Date().toLocaleString(),
-        count: 0
+        count: 1
       })
     }
 
