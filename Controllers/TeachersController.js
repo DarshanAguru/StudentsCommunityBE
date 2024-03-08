@@ -11,6 +11,7 @@ export const login = async (req, res) => {
   try {
     const teacher = await Teachers.findOne({ phoneNumber }) // getting the teacher details
     // if not found
+    console.log(teacher)
     if (!teacher) {
       return res.status(404).send({ message: 'Not Found' })
     }
@@ -49,7 +50,7 @@ export const login = async (req, res) => {
       return res.status(500).send({ message: 'Internal Server Error' }) // Server Error .. Retry login
     }
 
-    const dataToSend = { ...teacher._doc, password: undefined, messages: undefined, assignments: undefined, created_at: undefined, updated_at: undefined, __v: undefined, token }
+    const dataToSend = { ...teacher._doc, password: undefined, created_at: undefined, updated_at: undefined, __v: undefined, token }
     res.status(200).send(dataToSend) // retuning teacher details
   } catch (err) {
     console.log(err)
@@ -221,6 +222,7 @@ export const getAllAssignmentsOfTeacher = async (req, res) => {
 export const getAllSchools = async (req, res) => {
   try {
     const schools = await LocalAdmins.find({ verificationStatus: 'verified' }, 'institution')
+    // console.log(schools)
     if (!schools) {
       return res.status(404).send({ message: 'Not Found' })
     }
@@ -257,7 +259,7 @@ export const addPointsToAssignment = async (req, res) => {
 export const getAllNotifications = async (req, res) => {
   const teacherId = req.params.id
   try {
-    const teacher = await Students.findOne({ _id: teacherId })
+    const teacher = await Teachers.findOne({ _id: teacherId })
     if (!teacher) {
       return res.status(404).send({ message: 'Teacher not found' })
     }

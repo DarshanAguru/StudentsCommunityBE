@@ -9,6 +9,22 @@ export const getAllMessages = async (req, res) => {
     if (!messages) {
       return res.status(404).send({ message: 'Messages not found' })
     }
+    for (let i = 0; i < messages.length; i++) {
+      const profmsgs = messages[i].replies.filter(msg => msg.senderType === 'teachers' || msg.senderType === 'mentors')
+      const studsmsgs = messages[i].replies.filter(msg => msg.senderType === 'students')
+      profmsgs.sort((a, b) => {
+        const d1 = new Date(a.created_at).getTime()
+        const d2 = new Date(b.created_at).getTime()
+        return d1 - d2
+      })
+      studsmsgs.sort((a, b) => {
+        const d1 = new Date(a.created_at).getTime()
+        const d2 = new Date(b.created_at).getTime()
+        return d1 - d2
+      })
+      const replies = [...profmsgs, ...studsmsgs]
+      messages[i].replies = replies
+    }
     res.status(200).send(messages)
   } catch (err) {
     console.log(err)
@@ -172,10 +188,28 @@ export const addReply = async (req, res) => {
 
 export const getAllMessagesBySchool = async (req, res) => {
   const schoolName = req.body.school
+
   try {
     const schoolMessages = await Messages.find({ school: schoolName })
     if (!schoolMessages) {
       return res.status(404).send({ message: 'Not Found' })
+    }
+
+    for (let i = 0; i < schoolMessages.length; i++) {
+      const profmsgs = schoolMessages[i].replies.filter(msg => msg.senderType === 'teachers' || msg.senderType === 'mentors')
+      const studsmsgs = schoolMessages[i].replies.filter(msg => msg.senderType === 'students')
+      profmsgs.sort((a, b) => {
+        const d1 = new Date(a.created_at).getTime()
+        const d2 = new Date(b.created_at).getTime()
+        return d1 - d2
+      })
+      studsmsgs.sort((a, b) => {
+        const d1 = new Date(a.created_at).getTime()
+        const d2 = new Date(b.created_at).getTime()
+        return d1 - d2
+      })
+      const replies = [...profmsgs, ...studsmsgs]
+      schoolMessages[i].replies = replies
     }
     res.status(200).send(schoolMessages)
   } catch (err) {
