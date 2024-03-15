@@ -1,6 +1,6 @@
 import express from 'express'
 import { verifyToken } from '../utils/jwt.js'
-import { login, register, logout, postAssignment, getStudentsBySchool, getAllAssignmentsOfTeacher, getAllSchools, addPointsToAssignment, getAllAssignmentsBySchoolAndGradeAndSubject, getAllNotifications, clearNotification, editDetails } from '../Controllers/TeachersController.js'
+import { login, register, logout, postAssignment, getStudentsBySchool, getAllAssignmentsOfTeacher, getAllSchools, getAllAssignmentsBySchoolAndGradeAndSubject, getAllNotifications, clearNotification, editDetails } from '../Controllers/TeachersController.js'
 
 const TeacherRouter = express.Router()
 
@@ -17,7 +17,6 @@ TeacherRouter.post('/postassignment/:id', verifyToken, postAssignment)
 TeacherRouter.post('/getAllassignments', verifyToken, getAllAssignmentsBySchoolAndGradeAndSubject)
 TeacherRouter.post('/getAllStudents', verifyToken, getStudentsBySchool)
 TeacherRouter.post('/getassignments/:id', verifyToken, getAllAssignmentsOfTeacher)
-TeacherRouter.post('/addPointsToAssignment/:id', verifyToken, addPointsToAssignment)
 TeacherRouter.post('/getAllNotifications/:id', verifyToken, getAllNotifications)
 TeacherRouter.post('/clearNotification/:id', verifyToken, clearNotification)
 

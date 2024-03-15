@@ -124,16 +124,15 @@ export const logout = async (req, res) => {
 
 export const postAssignment = async (req, res) => {
   const assignmentId = req.params.id
-  const { assignmentData, publishDate, school, grade, deadline, subject } = req.body
-  const imageLink = (req.body.imageLink) ? req.body.imageLink : undefined
+  const { assignmentQuestions, assignmentAnswers, publishDate, school, grade, deadline, subject } = req.body
   const teacherId = req.params.id.split('@')[0]
   try {
     const assignment = {
       assignmentId,
-      assignmentData,
+      assignmentQuestions,
+      assignmentAnswers,
       publishDate,
       deadline,
-      imageLink,
       grade,
       subject,
       school
@@ -230,29 +229,6 @@ export const getAllSchools = async (req, res) => {
       return res.status(404).send({ message: 'Not Found' })
     }
     res.status(200).send(schools)
-  } catch (err) {
-    console.log(err)
-    return res.status(500).send({ message: 'Internal Server Error' })
-  }
-}
-
-export const addPointsToAssignment = async (req, res) => {
-  const assignmentId = req.params.id
-  const senderId = req.body.id
-  const points = req.body.points
-  try {
-    const assignmentThread = await Assignments.findOne({ assignmentId })
-    if (!assignmentThread) {
-      return res.status(404).send({ message: 'Assignment not found' })
-    }
-
-    const submittedAssign = assignmentThread.submissions.filter(assignSub => assignSub.senderId === senderId)
-    submittedAssign.points = points
-    const allAssigns = assignmentThread.submissions.filter(assignSub => assignSub.senderId !== senderId)
-    allAssigns.push(submittedAssign)
-    assignmentThread.submissions = allAssigns
-    await assignmentThread.save()
-    return res.status(200).send({ message: 'Success' })
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })

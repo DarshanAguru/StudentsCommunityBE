@@ -153,19 +153,30 @@ export const getAllMessagesOfStudent = async (req, res) => {
 
 export const submitAssignment = async (req, res) => {
   const assignmentId = req.params.id
-  const { senderId, senderName, message } = req.body
-  const imageLink = req.body.imageLink ? req.body.imageLink : undefined
+  const { senderId, senderName, assignmentAnswers } = req.body
 
   try {
     const assignment = await Assignments.findOne({ assignmentId })
     if (!assignment) {
       return res.status(404).send({ message: 'Not Found' })
     }
+
+    let points = 0
+    for (let i = 0; i < assignmentAnswers.length; i++) {
+      if (assignmentAnswers[i] !== null && assignmentAnswers[i].trim() !== '') {
+        if (assignment.assignmentAnswers[i].trim().toLowerCase() === assignmentAnswers[i].trim().toLowerCase()) {
+          points += 1
+        }
+      }
+    }
+
+    points = toString(points)
+
     const newSubmission = {
       senderId,
       senderName,
-      message,
-      imageLink
+      assignmentAnswers,
+      points
     }
 
     const student = await Students.findOne({ _id: senderId })

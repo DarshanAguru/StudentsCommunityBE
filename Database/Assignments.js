@@ -3,9 +3,8 @@ import { model, Schema } from 'mongoose'
 const AssignmentSubmissions = new Schema({
   senderId: { type: String },
   senderName: { type: String },
-  message: { type: String },
-  imageLink: { type: String },
-  points: { type: String, default: 'Pending' }
+  assignmentAnswers: { type: Array },
+  points: { type: String, default: '0' }
 },
 {
   timestamps: {
@@ -15,8 +14,8 @@ const AssignmentSubmissions = new Schema({
 
 const AssignmentsSchema = new Schema({
   assignmentId: { type: String, required: true }, // coversation id -- teacher , nonce, msg no 99840461973@0354
-  assignmentData: { type: String },
-  imageLink: { type: String },
+  assignmentQuestions: { type: Array },
+  assignmentAnswers: { type: Array },
   publishDate: { type: Date },
   deadline: { type: Date },
   school: { type: String },
