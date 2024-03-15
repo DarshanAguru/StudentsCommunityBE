@@ -82,6 +82,25 @@ export const register = async (req, res) => {
   }
 }
 
+export const editDetails = async (req, res) => {
+  const mentorId = req.params.id
+  // console.log(teacherId)
+  const { name, age, institution, gender, qualification, subjectExpertise, resumeLink } = req.body
+  try {
+    const mentor = await Mentors.findOneAndUpdate(
+      { _id: mentorId },
+      { name, age, institution, gender, qualification, subjectExpertise, resumeLink }
+    )
+    if (!mentor) {
+      return res.status(404).send({ message: 'Mentor not found' })
+    }
+    await mentor.save()
+    res.status(200).send({ message: 'Success' })
+  } catch (err) {
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
 export const logout = async (req, res) => {
   const id = req.params.id
 
