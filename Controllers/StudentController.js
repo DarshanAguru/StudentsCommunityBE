@@ -164,8 +164,29 @@ export const submitAssignment = async (req, res) => {
     let points = 0
     for (let i = 0; i < assignmentAnswers.length; i++) {
       if (assignmentAnswers[i] !== null && assignmentAnswers[i].trim() !== '') {
-        if (assignment.assignmentAnswers[i].trim().toLowerCase() === assignmentAnswers[i].trim().toLowerCase()) {
-          points += 1
+        if (assignment.assignmentQuestions[i].questionType === 'singleSelect') {
+          if (assignment.assignmentAnswers[i].trim().toLowerCase() === assignmentAnswers[i].trim().toLowerCase()) {
+            points += 1
+          }
+        } else if (assignment.assignmentQuestions[i].questionType === 'multiSelect') {
+          let check = 0
+          for (let j = 0; j < assignment.assignmentAnswers[i].length; j++) {
+            if (j >= assignmentAnswers[i].length) {
+              break
+            }
+            assignmentAnswers[i].sort()
+            assignment.assignmentAnswers[i].sort()
+            if (assignment.assignmentAnswers[i][j].trim().toLowerCase() === assignmentAnswers[i][j].trim().toLowerCase()) {
+              check += 1
+            }
+          }
+          if (check === assignment.assignmentAnswers[i].length) {
+            points += 1
+          }
+        } else {
+          if (assignment.assignmentAnswers[i].trim().toLowerCase() === assignmentAnswers[i].trim().toLowerCase()) {
+            points += 1
+          }
         }
       }
     }
