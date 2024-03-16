@@ -90,6 +90,20 @@ export const register = async (req, res) => {
   }
 }
 
+export const getAssignment = async (req, res) => {
+  const assignmentId = req.params.id
+  try {
+    const assignment = await Assignments.findOne({ assignmentId })
+    if (!assignment) {
+      return res.status(404).send({ message: 'Not Found' })
+    }
+    res.status(200).send(assignment)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
 export const editDetails = async (req, res) => {
   const studentId = req.params.id
   const { name, age, school, grade, gender } = req.body
@@ -164,26 +178,20 @@ export const submitAssignment = async (req, res) => {
     let points = 0
     for (let i = 0; i < assignmentAnswers.length; i++) {
       if (assignmentAnswers[i] !== null && assignmentAnswers[i].trim() !== '') {
-        const marks = assignment.assignmentQuestions[i].marks
-        if (assignment.assignmentQuestions[i].questionType === 'singleSelect') {
-          if (assignment.assignmentAnswers[i].trim().toLowerCase() === assignmentAnswers[i].trim().toLowerCase()) {
-            points += marks
+        const marks = parseInt(assignment.questions[i].marks)
+        let check = 0
+        for (let j = 0; j < assignment.questions[i].answers.length; j++) {
+          if (j >= assignmentAnswers[i].length) {
+            break
           }
-        } else {
-          let check = 0
-          for (let j = 0; j < assignment.assignmentAnswers[i].length; j++) {
-            if (j >= assignmentAnswers[i].length) {
-              break
-            }
-            assignmentAnswers[i].sort()
-            assignment.assignmentAnswers[i].sort()
-            if (assignment.assignmentAnswers[i][j].trim().toLowerCase() === assignmentAnswers[i][j].trim().toLowerCase()) {
-              check += 1
-            }
+          assignmentAnswers[i].sort()
+          assignment.questions[i].answers.sort()
+          if (assignment.questions[i].answers[j].trim().toLowerCase() === assignmentAnswers[i][j].trim().toLowerCase()) {
+            check += 1
           }
-          if (check === assignment.assignmentAnswers[i].length) {
-            points += marks
-          }
+        }
+        if (check === assignment.questions[i].answers.length) {
+          points += marks
         }
       }
     }

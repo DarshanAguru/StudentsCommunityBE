@@ -14,8 +14,8 @@ const AssignmentSubmissions = new Schema({
 
 const AssignmentsSchema = new Schema({
   assignmentId: { type: String, required: true }, // coversation id -- teacher , nonce, msg no 99840461973@0354
-  assignmentQuestions: { type: Array },
-  assignmentAnswers: { type: Array },
+  assignmentTitle: { type: String },
+  questions: { type: Array },
   publishDate: { type: Date },
   deadline: { type: Date },
   school: { type: String },

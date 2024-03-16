@@ -123,15 +123,30 @@ export const logout = async (req, res) => {
   }
 }
 
+export const getAssignment = async (req, res) => {
+  const assignmentId = req.params.id
+  try {
+    const assignment = await Assignments.findOne({ assignmentId })
+    if (!assignment) {
+      return res.status(404).send({ message: 'Not Found' })
+    }
+    res.status(200).send(assignment)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
 export const postAssignment = async (req, res) => {
   const assignmentId = req.params.id
-  const { assignmentQuestions, assignmentAnswers, publishDate, school, grade, deadline, subject } = req.body
+  const { assignmentTitle, questions, school, grade, deadline, subject } = req.body
   const teacherId = req.params.id.split('@')[0]
   try {
+    const publishDate = new Date().toLocaleString()
     const assignment = {
       assignmentId,
-      assignmentQuestions,
-      assignmentAnswers,
+      assignmentTitle,
+      questions,
       publishDate,
       deadline,
       grade,
@@ -180,7 +195,11 @@ export const getAllAssignmentsBySchoolAndGradeAndSubject = async (req, res) => {
     if (!assignments) {
       return res.status(404).send({ message: 'Not Found' })
     }
-    res.status(200).send(assignments)
+    const result = []
+    for (let i = 0; i < assignments.length; i++) {
+      result.push({ id: assignments[i].assignmentId, title: assignments[i].assignmentTitle, deadline: assignments[i].deadline })
+    }
+    res.status(200).send(result)
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
