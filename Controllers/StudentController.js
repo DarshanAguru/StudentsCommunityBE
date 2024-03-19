@@ -97,7 +97,15 @@ export const getAssignment = async (req, res) => {
     if (!assignment) {
       return res.status(404).send({ message: 'Not Found' })
     }
-    res.status(200).send(assignment)
+
+    for (let i = 0; i < assignment.questions.length; i++) {
+      for (let j = 0; j < assignment.questions[i].options.length; j++) {
+        assignment.questions[i].options[j].isChecked = false
+      }
+    }
+    const assignmentToSend = { ...assignment, answers: undefined }
+
+    res.status(200).send(assignmentToSend)
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
