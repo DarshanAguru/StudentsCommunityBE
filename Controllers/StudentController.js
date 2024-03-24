@@ -254,10 +254,16 @@ export const getAllAssignmentsBySchoolAndGradeAndSubject = async (req, res) => {
   const subject = req.body.subject
   try {
     const assignments = await Assignments.find({ school, grade, subject })
+
     if (!assignments) {
       return res.status(404).send({ message: 'Not Found' })
     }
-    res.status(200).send(assignments)
+    const dataToSend = []
+    for (let i = 0; i < assignments.length; i++) {
+      const assign = { id: assignments[i].assignmentId, title: assignments[i].assignmentTitle, publishDate: assignments[i].publishDate, deadline: assignments[i].deadline }
+      dataToSend.push(assign)
+    }
+    res.status(200).send(dataToSend)
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
