@@ -11,7 +11,7 @@ export const login = async (req, res) => {
   try {
     const teacher = await Teachers.findOne({ phoneNumber }) // getting the teacher details
     // if not found
-    console.log(teacher)
+    // console.log(teacher)
     if (!teacher) {
       return res.status(404).send({ message: 'Not Found' })
     }
@@ -180,6 +180,29 @@ export const postAssignment = async (req, res) => {
 
     await assignmentSave.save()
     res.status(201).send({ message: 'Assignment Saved' })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const deleteAssignment = async (req, res) => {
+  const assignmentId = req.params.id
+  const teacherId = req.params.id.split('@')[0]
+  try {
+    await Assignments.findOneAndDelete({ assignmentId })
+    const teacher = await Teachers.findOne({ _id: teacherId })
+    if (!teacher) {
+      return res.status(404).send({ message: 'Not Found' })
+    }
+    if (!teacher.assignments || teacher.assignments.length === 0) {
+      return res.status(404).send({ message: 'Not Found' })
+    } else if (teacher.assignments.includes(assignmentId)) {
+      const reqAssignments = teacher.assignments.filter((assId) => (assId !== assignmentId))
+      teacher.assignments = reqAssignments
+      await teacher.save()
+    }
+    return res.status(200).send({ message: 'Deleted Successfully' })
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
