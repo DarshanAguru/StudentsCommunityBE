@@ -183,9 +183,11 @@ export const submitAssignment = async (req, res) => {
     }
     console.log(assignmentAnswers)
     let points = 0
+    let totalMarks = 0
     for (let i = 0; i < assignmentAnswers.length; i++) {
       if (assignmentAnswers[i] !== null) {
         const marks = parseInt(assignment.questions[i].marks)
+        totalMarks += marks
         let check = 0
         for (let j = 0; j < assignment.questions[i].answers.length; j++) {
           if (j >= assignmentAnswers[i].length) {
@@ -258,7 +260,7 @@ export const submitAssignment = async (req, res) => {
     } else {
       return res.status(400).send({ message: 'Already Submitted' })
     }
-    res.status(201).send({ marks: points })
+    res.status(201).send({ marks: points, totalMarks })
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
