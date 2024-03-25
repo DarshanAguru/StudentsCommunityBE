@@ -181,10 +181,10 @@ export const submitAssignment = async (req, res) => {
     if (!assignment) {
       return res.status(404).send({ message: 'Not Found' })
     }
-
+    console.log(assignmentAnswers)
     let points = 0
     for (let i = 0; i < assignmentAnswers.length; i++) {
-      if (assignmentAnswers[i] !== null && assignmentAnswers[i].trim() !== '') {
+      if (assignmentAnswers[i] !== null) {
         const marks = parseInt(assignment.questions[i].marks)
         let check = 0
         for (let j = 0; j < assignment.questions[i].answers.length; j++) {
@@ -193,7 +193,10 @@ export const submitAssignment = async (req, res) => {
           }
           assignmentAnswers[i].sort()
           assignment.questions[i].answers.sort()
-          if (assignment.questions[i].answers[j].trim().toLowerCase() === assignmentAnswers[i][j].trim().toLowerCase()) {
+          if (
+            assignment.questions[i].answers[j].trim().toLowerCase() ===
+            assignmentAnswers[i][j].trim().toLowerCase()
+          ) {
             check += 1
           }
         }
@@ -202,8 +205,7 @@ export const submitAssignment = async (req, res) => {
         }
       }
     }
-
-    points = toString(points)
+    points = `${points}`
 
     const newSubmission = {
       senderId,
@@ -220,27 +222,43 @@ export const submitAssignment = async (req, res) => {
     if (!student.assignments || student.assignments.length === 0) {
       student.assignments.push(assignmentId)
       await student.save()
+      const teacherId = assignmentId.split('@')[0]
+      const teacher = await Teachers.findOne({ _id: teacherId })
+      if (!teacher) {
+        return res.status(500).send({ message: 'Internal Server Error' })
+      }
+
+      teacher.notifications.push({
+        senderId,
+        senderName,
+        notificationType: 'Assignment Submit',
+        createdAt: new Date().toLocaleString()
+      })
+      await teacher.save()
+      assignment.submissions.push(newSubmission)
+      await assignment.save()
     } else if (!student.assignments.includes(assignmentId)) {
       student.assignments.push(assignmentId)
       await student.save()
-    }
+      const teacherId = assignmentId.split('@')[0]
+      const teacher = await Teachers.findOne({ _id: teacherId })
+      if (!teacher) {
+        return res.status(500).send({ message: 'Internal Server Error' })
+      }
 
-    const teacherId = assignmentId.split('@')[0]
-    const teacher = await Teachers.findOne({ _id: teacherId })
-    if (!teacher) {
-      return res.status(500).send({ message: 'Internal Server Error' })
+      teacher.notifications.push({
+        senderId,
+        senderName,
+        notificationType: 'Assignment Submit',
+        createdAt: new Date().toLocaleString()
+      })
+      await teacher.save()
+      assignment.submissions.push(newSubmission)
+      await assignment.save()
+    } else {
+      return res.status(400).send({ message: 'Already Submitted' })
     }
-
-    teacher.notifications.push({
-      senderId,
-      senderName,
-      notificationType: 'Assignment Submit',
-      createdAt: new Date().toLocaleString()
-    })
-    await teacher.save()
-    assignment.submissions.push(newSubmission)
-    await assignment.save()
-    res.status(201).send({ message: 'Assignment Submitted' })
+    res.status(201).send({ marks: points })
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
