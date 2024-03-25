@@ -249,10 +249,11 @@ export const submitAssignment = async (req, res) => {
       }
 
       teacher.notifications.push({
-        senderId,
-        senderName,
+        userId: senderId,
+        userName: senderName,
         notificationType: 'Assignment Submit',
-        createdAt: new Date().toLocaleString()
+        createdAt: new Date().toLocaleString(),
+        count: 1
       })
       await teacher.save()
       assignment.submissions.push(newSubmission)
