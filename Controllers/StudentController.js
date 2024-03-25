@@ -51,7 +51,6 @@ export const login = async (req, res) => {
       ...student._doc,
       password: undefined,
       messages: undefined,
-      assignments: undefined,
       created_at: undefined,
       updated_at: undefined,
       __v: undefined,
