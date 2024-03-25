@@ -207,7 +207,7 @@ export const submitAssignment = async (req, res) => {
         }
       }
     }
-    points = `${points}`
+    points = `${points}/${totalMarks}`
 
     const newSubmission = {
       senderId,
@@ -260,7 +260,7 @@ export const submitAssignment = async (req, res) => {
     } else {
       return res.status(400).send({ message: 'Already Submitted' })
     }
-    res.status(201).send({ marks: points, totalMarks })
+    res.status(201).send({ marks: points })
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
