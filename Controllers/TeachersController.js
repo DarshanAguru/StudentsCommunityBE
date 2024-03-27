@@ -243,6 +243,33 @@ export const getStudentsBySchool = async (req, res) => {
   }
 }
 
+export const getAssignmentSubmissions = async (req, res) => {
+  try {
+    const assignmentId = req.params.id
+    const assignmentData = await Assignments.findOne({ assignmentId })
+    const grade = assignmentData.grade
+    const school = assignmentData.school
+    const allStudents = await Students.find({ grade, school }, { _id: true, name: true })
+    const allStudentsIds = allStudents.map((student) => (student._id.toString()))
+    const allSubmittedStudentData = assignmentData.submissions.map((submissionData) => ({ id: submissionData.senderId, name: submissionData.senderName, marks: submissionData.points }))
+    const allSubmittedStudentIds = assignmentData.submissions.map((submissionData) => (submissionData.senderId))
+    const submitted = []
+    const notSubmitted = []
+    allStudentsIds.forEach((studentId) => {
+      if (allSubmittedStudentIds.includes(studentId)) {
+        const student = allSubmittedStudentData.filter((submission) => (submission.id === studentId))[0]
+        submitted.push({ name: student.name, marks: student.marks })
+      } else {
+        notSubmitted.push(allStudents.filter((studentt) => (studentt.id === studentId))[0].name)
+      }
+    })
+    return res.status(200).send({ submitted, unsubmitted: notSubmitted })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
 export const getAllAssignmentsOfTeacher = async (req, res) => {
   const teacherId = req.params.id
   try {
@@ -294,7 +321,7 @@ export const getAllNotifications = async (req, res) => {
 
 export const clearNotification = async (req, res) => {
   const teacherId = req.params.id
-  const notifId = req.body.id
+  const notifId = req.body.notifId
   try {
     const teacher = await Teachers.findOne({ _id: teacherId })
     if (!teacher) {
