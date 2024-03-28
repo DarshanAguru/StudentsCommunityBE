@@ -268,6 +268,21 @@ export const submitAssignment = async (req, res) => {
   }
 }
 
+export const getAssignmentScoreAndData = async (req, res) => {
+  try {
+    const assignmentId = req.params.id
+    const studentId = req.body.id
+    const assignment = await Assignments.findOne({ assignmentId })
+    const studentSubmission = assignment.submissions.filter((submission) => (submission.senderId === studentId))[0]
+    const questions = assignment.questions
+    const studentData = { studentAnswers: studentSubmission.assignmentAnswers, marks: studentSubmission.points }
+    return res.status(200).send({ studentData, AssignmentData: questions })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
 export const getAllAssignmentsBySchoolAndGradeAndSubject = async (req, res) => {
   const school = req.body.school
   const grade = req.body.grade

@@ -1,6 +1,6 @@
 import express from 'express'
 import { verifyToken } from '../utils/jwt.js'
-import { login, register, logout, submitAssignment, getAllMessagesOfStudent, getAllSchools, getAllAssignmentsBySchoolAndGradeAndSubject, clearNotification, getAllNotifications, editDetails, getAssignment } from '../Controllers/StudentController.js'
+import { login, register, logout, submitAssignment, getAllMessagesOfStudent, getAllSchools, getAllAssignmentsBySchoolAndGradeAndSubject, clearNotification, getAllNotifications, editDetails, getAssignment, getAssignmentScoreAndData } from '../Controllers/StudentController.js'
 
 const StudentRouter = express.Router()
 
@@ -14,6 +14,7 @@ StudentRouter.post('/editDetails/:id', verifyToken, editDetails)
 StudentRouter.post('/getAssignment/:id', verifyToken, getAssignment)
 StudentRouter.post('/submitassignment/:id', verifyToken, submitAssignment)
 StudentRouter.post('/getallassignments', verifyToken, getAllAssignmentsBySchoolAndGradeAndSubject)
+StudentRouter.post('/getAssignmentScoreAndData/:id', verifyToken, getAssignmentScoreAndData)
 StudentRouter.post('/getmessages/:id', verifyToken, getAllMessagesOfStudent)
 StudentRouter.post('/getAllNotifications/:id', verifyToken, getAllNotifications)
 StudentRouter.post('/clearNotification/:id', verifyToken, clearNotification)
