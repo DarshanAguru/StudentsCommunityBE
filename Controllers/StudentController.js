@@ -273,10 +273,29 @@ export const getAssignmentScoreAndData = async (req, res) => {
     const assignmentId = req.params.id
     const studentId = req.body.id
     const assignment = await Assignments.findOne({ assignmentId })
+    if (!assignment) {
+      return res.status(404).send({ message: 'Not Found' })
+    }
     const studentSubmission = assignment.submissions.filter((submission) => (submission.senderId === studentId))[0]
     const questions = assignment.questions
     const studentData = { studentAnswers: studentSubmission.assignmentAnswers, marks: studentSubmission.points }
     return res.status(200).send({ studentData, AssignmentData: questions })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const getAllAssignmentsForClass = async (req, res) => {
+  try {
+    const school = req.body.school
+    const grade = req.body.grade
+    const assignments = await Assignments.find({ school, grade })
+
+    if (!assignments) {
+      return res.status(400).send({ message: 'Not Found' })
+    }
+    return res.status(200).send(assignments)
   } catch (err) {
     console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
