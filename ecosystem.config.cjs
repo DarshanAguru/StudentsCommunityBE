@@ -2,7 +2,7 @@ module.exports = {
   apps: [{
     name: 'Edu Resolve backend',
     script: 'server.js',
-    instances: 'max',
+    instances: '4',
     autorestart: true,
     max_memory_restart: '1G',
     watch: true,
