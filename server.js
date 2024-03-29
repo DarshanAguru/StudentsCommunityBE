@@ -52,6 +52,7 @@ app.use('/localadmins', LocalAdminRouter)
 app.use('/globaladmins', GlobalAdminRouter)
 app.use('/messages', MessagesRouter)
 app.use('/global', globalRouter)
+
 if (cluster.isPrimary && process.env.NODE_ENV === 'production') {
   const numCpus = os.cpus().length
   for (let i = 0; i < numCpus; i++) {
@@ -59,7 +60,7 @@ if (cluster.isPrimary && process.env.NODE_ENV === 'production') {
   }
 
   cluster.on('exit', (worker) => {
-    console.log('Worker died')
+    console.log(`Worker ${worker.process.pid} died`)
   })
 } else {
   // Start the Express server.
