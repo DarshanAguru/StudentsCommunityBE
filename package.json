@@ -5,7 +5,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
+    "start": "pm2 start ecosystem.config.cjs --env production --watch",
+    "stop": "pm2 stop all",
     "dev": "nodemon server.js",
     "eslint": "eslint ./",
     "eslint-fix": "eslint ./ --fix"
@@ -30,6 +31,7 @@
     "nodemailer": "^6.9.9",
     "nodemon": "^3.0.3",
     "otp-generator": "^4.0.1",
+    "pm2": "^5.3.1",
     "request": "^2.88.2"
   },
   "devDependencies": {

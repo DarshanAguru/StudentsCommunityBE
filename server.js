@@ -26,15 +26,15 @@ try {
 }
 
 const rateLimit = limiter.rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 200
+  windowMs: 20 * 60 * 1000,
+  max: 400
 })
 
 app.use(rateLimit)
 
 app.use(cors(
   {
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', '*'],
     methods: ['GET', 'POST'],
     credentials: true,
     optionsSuccessStatus: 204

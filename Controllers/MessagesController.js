@@ -27,7 +27,6 @@ export const getAllMessages = async (req, res) => {
     }
     res.status(200).send(messages)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -41,7 +40,6 @@ export const getMessageThread = async (req, res) => {
     }
     res.status(200).send(message)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -83,7 +81,6 @@ export const addMessage = async (req, res) => {
     await messageSave.save()
     res.status(201).send({ message: 'Message Saved' })
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -213,7 +210,6 @@ export const getAllMessagesBySchool = async (req, res) => {
     }
     res.status(200).send(schoolMessages)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -249,7 +245,6 @@ export const upvote = async (req, res) => {
     await messageThread.save()
     res.status(200).send({ len })
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -285,7 +280,6 @@ export const downvote = async (req, res) => {
     await messageThread.save()
     res.status(200).send({ len })
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }

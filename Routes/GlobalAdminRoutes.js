@@ -9,7 +9,6 @@ GlobalAdminRouter.post('/login', login)
 GlobalAdminRouter.post('/register', register)
 
 // requires Login and jwt middleware
-// GlobalAdminRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
 GlobalAdminRouter.post('/verifyMentor/:id', verifyToken, verifyMentor)
 GlobalAdminRouter.post('/verifyLocalAdmin/:id', verifyToken, verifyLocalAdmin)
 GlobalAdminRouter.post('/rejectLocalAdmin/:id', verifyToken, rejectLocalAdmin)

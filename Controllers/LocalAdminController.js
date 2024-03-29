@@ -43,21 +43,18 @@ export const login = async (req, res) => {
     )
 
     if (!tag) {
-      console.log('Error')
       return res.status(500).send({ message: 'Internal Server Error' }) // Server Error .. Retry login
     }
 
     const dataToSend = { ...localAdmin._doc, password: undefined, created_at: undefined, updated_at: undefined, __v: undefined, token }
     res.status(200).send(dataToSend) // retuning teacher details
   } catch (err) {
-    console.log(err)
     res.status(401).send({ message: 'Not authorized' }) // Not authorized
   }
 }
 
 export const register = async (req, res) => {
   const { phoneNumber, name, emailId, institution, password, age, gender, description, designation } = req.body
-  // console.log(req.body);
   const hashedPassword = await hashPassword(password)
 
   try {
@@ -76,7 +73,6 @@ export const register = async (req, res) => {
     await newLocalAdmin.save()
     res.status(201).send({ message: 'Registered' })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ message: 'Internal Server Error' }) // Internal Server Error
   }
 }
@@ -96,7 +92,6 @@ export const logout = async (req, res) => {
     }
     res.status(200).send({ message: 'Logged out Successfully!' })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ message: 'Internal Server Error' }) // Internal Server Error
   }
 }
@@ -122,7 +117,6 @@ export const verifyTeacher = async (req, res) => {
 
     res.status(200).send({ message: 'Verified' })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -147,7 +141,6 @@ export const rejectTeacher = async (req, res) => {
     }
     res.status(200).send({ message: 'Teacher Application Rejected' })
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -161,7 +154,6 @@ export const getTeachersBySchool = async (req, res) => {
     }
     res.status(200).send(teachers)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }

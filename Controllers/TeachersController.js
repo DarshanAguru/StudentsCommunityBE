@@ -10,8 +10,6 @@ export const login = async (req, res) => {
   const { phoneNumber, password } = req.body // taking post parameters from request
   try {
     const teacher = await Teachers.findOne({ phoneNumber }) // getting the teacher details
-    // if not found
-    // console.log(teacher)
     if (!teacher) {
       return res.status(404).send({ message: 'Not Found' })
     }
@@ -46,21 +44,18 @@ export const login = async (req, res) => {
     )
 
     if (!tag) {
-      console.log('Error')
       return res.status(500).send({ message: 'Internal Server Error' }) // Server Error .. Retry login
     }
 
     const dataToSend = { ...teacher._doc, password: undefined, created_at: undefined, updated_at: undefined, __v: undefined, token }
     res.status(200).send(dataToSend) // retuning teacher details
   } catch (err) {
-    console.log(err)
     res.status(401).send({ message: 'Not authorized' }) // Not authorized
   }
 }
 
 export const register = async (req, res) => {
   const { phoneNumber, name, emailId, institution, password, age, gender, qualification, subjectExpertise } = req.body
-  // console.log(req.body);
   const hashedPassword = await hashPassword(password)
 
   try {
@@ -79,14 +74,12 @@ export const register = async (req, res) => {
     await newTeacher.save()
     res.status(201).send({ message: 'Registered' })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ message: 'Internal Server Error' }) // Internal Server Error
   }
 }
 
 export const editDetails = async (req, res) => {
   const teacherId = req.params.id
-  // console.log(teacherId)
   const { name, age, school, gender } = req.body
   try {
     const teacher = await Teachers.findOneAndUpdate(
@@ -118,7 +111,6 @@ export const logout = async (req, res) => {
     }
     res.status(200).send({ message: 'Logged out Successfully!' })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ message: 'Internal Server Error' }) // Internal Server Error
   }
 }
@@ -132,7 +124,6 @@ export const getAssignment = async (req, res) => {
     }
     res.status(200).send(assignment)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -181,7 +172,6 @@ export const postAssignment = async (req, res) => {
     await assignmentSave.save()
     res.status(201).send({ message: 'Assignment Saved' })
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -204,7 +194,6 @@ export const deleteAssignment = async (req, res) => {
     }
     return res.status(200).send({ message: 'Deleted Successfully' })
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -224,7 +213,6 @@ export const getAllAssignmentsBySchoolAndGradeAndSubject = async (req, res) => {
     }
     res.status(200).send(result)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -238,7 +226,6 @@ export const getStudentsBySchool = async (req, res) => {
     }
     res.status(200).send(students)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -265,7 +252,6 @@ export const getAssignmentSubmissions = async (req, res) => {
     })
     return res.status(200).send({ submitted, unsubmitted: notSubmitted })
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -286,7 +272,6 @@ export const getAllAssignmentsOfTeacher = async (req, res) => {
     }
     res.status(200).send(arrAssigns)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -294,13 +279,11 @@ export const getAllAssignmentsOfTeacher = async (req, res) => {
 export const getAllSchools = async (req, res) => {
   try {
     const schools = await LocalAdmins.find({ verificationStatus: 'verified' }, 'institution')
-    // console.log(schools)
     if (!schools) {
       return res.status(404).send({ message: 'Not Found' })
     }
     res.status(200).send(schools)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }

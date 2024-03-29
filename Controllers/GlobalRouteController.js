@@ -15,7 +15,6 @@ export const forgotPassword = async (req, res) => {
   try {
     let data
     if (query === 'generateOTP') {
-      // console.log(req.body)
       if (type === 'mentor') {
         data = await Mentors.findOne({ phoneNumber: phoneNo, emailId: email })
       } else if (type === 'student') {
@@ -99,7 +98,6 @@ export const forgotPassword = async (req, res) => {
       return res.status(500).send({ message: 'Internal Server Error' })
     }
   } catch (e) {
-    console.log(e)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }

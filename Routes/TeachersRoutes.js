@@ -8,10 +8,7 @@ const TeacherRouter = express.Router()
 TeacherRouter.post('/login', login)
 TeacherRouter.post('/register', register)
 
-// get methods
-
 // requires Login and jwt middleware
-// TeacherRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
 TeacherRouter.post('/editDetails/:id', verifyToken, editDetails)
 TeacherRouter.post('/postassignment/:id', verifyToken, postAssignment)
 TeacherRouter.post('/getAssignment/:id', verifyToken, getAssignment)

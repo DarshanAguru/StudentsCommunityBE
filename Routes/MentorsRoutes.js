@@ -9,7 +9,6 @@ MentorRouter.post('/login', login)
 MentorRouter.post('/register', register)
 
 // requires Login and jwt middleware
-// MentorRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
 MentorRouter.post('/editDetails/:id', verifyToken, editDetails)
 
 // requires logged in

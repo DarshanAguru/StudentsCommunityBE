@@ -37,21 +37,18 @@ export const login = async (req, res) => {
     )
 
     if (!tag) {
-      console.log('Error')
       return res.status(500).send({ message: 'Internal Server Error' }) // Server Error .. Retry login
     }
 
     const dataToSend = { ...globalAdmin._doc, password: undefined, created_at: undefined, updated_at: undefined, __v: undefined, token }
     res.status(200).send(dataToSend) // retuning teacher details
   } catch (err) {
-    console.log(err)
     res.status(401).send({ message: 'Not authorized' }) // Not authorized
   }
 }
 
 export const register = async (req, res) => {
   const { phoneNumber, name, emailId, password, age, gender } = req.body
-  // console.log(req.body);
   const hashedPassword = await hashPassword(password)
 
   try {
@@ -67,7 +64,6 @@ export const register = async (req, res) => {
     await newGlobalAdmin.save()
     res.status(201).send({ message: 'Registered' })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ message: 'Internal Server Error' }) // Internal Server Error
   }
 }
@@ -87,7 +83,6 @@ export const logout = async (req, res) => {
     }
     res.status(200).send({ message: 'Logged out Successfully!' })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ message: 'Internal Server Error' }) // Internal Server Error
   }
 }
@@ -113,7 +108,6 @@ export const verifyMentor = async (req, res) => {
 
     res.status(200).send({ message: 'Verified' })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -139,7 +133,6 @@ export const verifyLocalAdmin = async (req, res) => {
 
     res.status(200).send({ message: 'Verified' })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -152,7 +145,6 @@ export const getAllLocalAdmins = async (req, res) => {
     }
     res.status(200).send(localAdmins)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -165,7 +157,6 @@ export const getAllMentors = async (req, res) => {
     }
     res.status(200).send(mentors)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -190,7 +181,6 @@ export const rejectMentor = async (req, res) => {
     }
     res.status(200).send({ message: 'Rejected' })
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -215,7 +205,6 @@ export const rejectLocalAdmin = async (req, res) => {
     }
     res.status(200).send({ message: 'Rejected' })
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }

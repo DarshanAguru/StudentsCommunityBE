@@ -11,7 +11,6 @@ export const login = async (req, res) => {
   const { phoneNumber, password } = req.body // taking post parameters from request
   try {
     const student = await Students.findOne({ phoneNumber }) // getting the student details
-    // if not found
     if (!student) {
       return res.status(404).send({ message: 'Not Found' })
     }
@@ -43,7 +42,6 @@ export const login = async (req, res) => {
     )
 
     if (!tag) {
-      console.log('Error')
       return res.status(500).send('Internal server Error') // server error ... Retry login
     }
 
@@ -58,7 +56,6 @@ export const login = async (req, res) => {
     }
     res.status(200).send(dataToSend) // retuning student details
   } catch (err) {
-    console.log(err)
     res.status(401).send({ message: 'Not authorized' }) // Not authorized
   }
 }
@@ -66,7 +63,6 @@ export const login = async (req, res) => {
 export const register = async (req, res) => {
   const { phoneNumber, name, emailId, grade, school, age, gender, password } =
     req.body
-  // console.log(req.body);
   const hashedPassword = await hashPassword(password)
 
   try {
@@ -84,7 +80,6 @@ export const register = async (req, res) => {
     await newStudent.save()
     res.status(201).send({ message: 'Registered' })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ message: 'Internal Server Error' }) // Internal Server Error
   }
 }
@@ -106,7 +101,6 @@ export const getAssignment = async (req, res) => {
 
     res.status(200).send(assignmentToSend)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -146,7 +140,6 @@ export const logout = async (req, res) => {
     }
     res.status(200).send({ message: 'Logged out Successfully!' })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ message: 'Internal Server Error' }) // Internal Server Error
   }
 }
@@ -167,7 +160,6 @@ export const getAllMessagesOfStudent = async (req, res) => {
     }
     res.status(200).send(arrMessages)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -263,7 +255,6 @@ export const submitAssignment = async (req, res) => {
     }
     res.status(201).send({ marks: points })
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -281,7 +272,6 @@ export const getAssignmentScoreAndData = async (req, res) => {
     const studentData = { studentAnswers: studentSubmission.assignmentAnswers, marks: studentSubmission.points }
     return res.status(200).send({ studentData, AssignmentData: questions })
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -297,7 +287,6 @@ export const getAllAssignmentsForClass = async (req, res) => {
     }
     return res.status(200).send(assignments)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -319,7 +308,6 @@ export const getAllAssignmentsBySchoolAndGradeAndSubject = async (req, res) => {
     }
     res.status(200).send(dataToSend)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -335,7 +323,6 @@ export const getAllSchools = async (req, res) => {
     }
     res.status(200).send(schools)
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: 'Internal Server Error' })
   }
 }
@@ -349,7 +336,6 @@ export const getAllNotifications = async (req, res) => {
     }
 
     const notifications = student.notifications
-    // console.log(notifications);
     return res.status(200).send(notifications)
   } catch (err) {
     res.status(500).send({ message: 'Internal Server Error' })
@@ -368,7 +354,6 @@ export const clearNotification = async (req, res) => {
     const notifArr = student.notifications.filter(
       (notif) => notif.userId !== notifId
     )
-    console.log(notifArr)
     student.notifications = notifArr
     await student.save()
     res.status(200).send({ message: 'Success' })

@@ -9,7 +9,6 @@ StudentRouter.post('/login', login)
 StudentRouter.post('/register', register)
 
 // requires Login and jwt middleware
-// StudentRouter.post('/test', verifyToken, (req, res) => { res.status(200).send(req.body) })
 StudentRouter.post('/editDetails/:id', verifyToken, editDetails)
 StudentRouter.post('/getAssignment/:id', verifyToken, getAssignment)
 StudentRouter.post('/submitassignment/:id', verifyToken, submitAssignment)
@@ -19,9 +18,6 @@ StudentRouter.post('/getAssignmentScoreAndData/:id', verifyToken, getAssignmentS
 StudentRouter.post('/getmessages/:id', verifyToken, getAllMessagesOfStudent)
 StudentRouter.post('/getAllNotifications/:id', verifyToken, getAllNotifications)
 StudentRouter.post('/clearNotification/:id', verifyToken, clearNotification)
-
-// name grade school
-// name school
 
 // requires logged in
 StudentRouter.post('/getAllSchools', getAllSchools)

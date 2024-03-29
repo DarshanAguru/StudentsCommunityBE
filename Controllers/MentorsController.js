@@ -42,21 +42,18 @@ export const login = async (req, res) => {
     )
 
     if (!tag) {
-      console.log('Error')
       return res.status(500).send({ message: 'Internal Server Error' }) // Server Error .. Retry login
     }
 
     const dataToSend = { ...mentor._doc, password: undefined, messages: undefined, created_at: undefined, updated_at: undefined, __v: undefined, token }
     res.status(200).send(dataToSend) // retuning teacher details
   } catch (err) {
-    console.log(err)
     res.status(401).send({ message: 'Not authorized' }) // Not authorized
   }
 }
 
 export const register = async (req, res) => {
   const { phoneNumber, name, emailId, password, age, gender, description, subjectExpertise, qualification, resumeLink, institution } = req.body
-  // console.log(req.body);
   const hashedPassword = await hashPassword(password)
 
   try {
@@ -77,14 +74,12 @@ export const register = async (req, res) => {
     await newMentor.save()
     res.status(201).send({ message: 'Registered' })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ message: 'Internal Server Error' }) // Internal Server Error
   }
 }
 
 export const editDetails = async (req, res) => {
   const mentorId = req.params.id
-  // console.log(teacherId)
   const { name, age, institution, gender, qualification, subjectExpertise, resumeLink } = req.body
   try {
     const mentor = await Mentors.findOneAndUpdate(
@@ -116,7 +111,6 @@ export const logout = async (req, res) => {
     }
     res.status(200).send({ message: 'Logged out Successfully!' })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ message: 'Internal Server Error' }) // Internal Server Error
   }
 }
