@@ -44,6 +44,8 @@ app.use(cors(
 
 const port = process.env.PORT || 9000
 
+app.get('/healthCheck/checkHealthOfServer', (req, res) => (res.statusCode(200)))
+
 app.use('/students', StudentRouter)
 app.use('/teachers', TeacherRouter)
 app.use('/mentors', MentorRouter)
