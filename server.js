@@ -31,7 +31,7 @@ try {
 app.use(compression())
 app.use(cors(
   {
-    origin: ['http://localhost:5173', 'https://animated-halva-c2f001.netlify.app'],
+    origin: ['http://localhost:5173', 'https://edu-resolve.netlify.app'],
     methods: ['GET', 'POST'],
     credentials: true,
     optionsSuccessStatus: 204
