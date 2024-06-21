@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-| Version | image Upload       |
+| Version | Images Uplaod      |
 | ------- | ------------------ |
-| 1.0.0   | :white_check_mark: |
-| 1.1.0   | :white_check_mark: |
+| 1.0.0   | ❎ Not supported   |
+| 1.1.0   | ✅ Supported       |
