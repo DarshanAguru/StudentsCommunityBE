@@ -23,6 +23,7 @@ const MessagesSchema = new Schema({
   tags: { type: [String] },
   school: { type: String },
   replies: { type: [ReplyMessages] },
+  reports: { type: [String] },
   upvote: { type: [String] },
   downvote: { type: [String] }
 },

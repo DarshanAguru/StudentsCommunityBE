@@ -6,17 +6,17 @@ const TeacherRouter = express.Router()
 
 // login and Register
 TeacherRouter.post('/login', login)
-TeacherRouter.post('/register', register)
+TeacherRouter.put('/register', register)
 
 // requires Login and jwt middleware
-TeacherRouter.post('/editDetails/:id', verifyToken, editDetails)
-TeacherRouter.post('/postassignment/:id', verifyToken, postAssignment)
+TeacherRouter.patch('/editDetails/:id', verifyToken, editDetails)
+TeacherRouter.put('/postassignment/:id', verifyToken, postAssignment)
 TeacherRouter.post('/getAssignment/:id', verifyToken, getAssignment)
 TeacherRouter.post('/getAllassignments', verifyToken, getAllAssignmentsBySchoolAndGradeAndSubject)
 TeacherRouter.post('/getAllStudents', verifyToken, getStudentsBySchool)
 TeacherRouter.post('/getassignments/:id', verifyToken, getAllAssignmentsOfTeacher)
 TeacherRouter.post('/getAssignmentSubmission/:id', verifyToken, getAssignmentSubmissions)
-TeacherRouter.post('/deleteAssignment/:id', verifyToken, deleteAssignment)
+TeacherRouter.delete('/deleteAssignment/:id', verifyToken, deleteAssignment)
 TeacherRouter.post('/getAllNotifications/:id', verifyToken, getAllNotifications)
 TeacherRouter.post('/clearNotification/:id', verifyToken, clearNotification)
 

@@ -31,8 +31,8 @@ try {
 app.use(compression())
 app.use(cors(
   {
-    origin: ['http://localhost:5173', '*'],
-    methods: ['GET', 'POST'],
+    origin: ['http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
     optionsSuccessStatus: 204
   }

@@ -2,13 +2,57 @@ import { Mentors } from '../Database/Mentors.js'
 import { Messages } from '../Database/Messages.js'
 import { Students } from '../Database/Students.js'
 import { Teachers } from '../Database/Teachers.js'
+import { uploadImage, retrieveImage, deleteImage } from '../utils/uploadToS3.js'
 
 export const getAllMessages = async (req, res) => {
   try {
-    const messages = await Messages.find({})
+    let messages = await Messages.find({})
     if (!messages) {
       return res.status(404).send({ message: 'Messages not found' })
     }
+
+    for (let i = 0; i < messages.length; i++) {
+      if (messages[i].reports.length >= 10) {
+        const msgId = messages[i].messageId
+        const imgLink = messages[i].imageLink
+        if (imgLink) {
+          const path = Buffer.from(imgLink, 'base64').toString('utf-8')
+          deleteImage(path)
+        }
+        messages = messages.filter(msg => msg.messageId !== msgId)
+        const studentId = msgId.split('@')[0]
+        const studentData = await Students.findOne({ _id: studentId })
+        if (!studentData) {
+          return res.status(500).send({ message: 'Internal Server Error' })
+        }
+        if (studentData.notifications.length === 0) {
+          studentData.notifications.push({
+            userId: 'EDURESOLVE',
+            userName: 'Team EduResolve',
+            notificationType: 'Report',
+            createdAt: new Date().toLocaleString(),
+            count: 1
+          })
+        } else if (studentData.notifications.includes('EDURESOLVE')) {
+          const data = studentData.notifications.find({ userId: 'EDURESOLVE' })
+          const arr = studentData.notifications.filter(notif => notif.userId !== 'EDURESOLVE')
+          data.count = data.count + 1
+          arr.push(data)
+          studentData.notifications = arr
+        } else {
+          studentData.notifications.push({
+            userId: 'EDURESOLVE',
+            userName: 'Team EduResolve',
+            notificationType: 'Message Deleted:Due to  violation the terms of EduResolve',
+            createdAt: new Date().toLocaleString(),
+            count: 1
+          })
+        }
+        await studentData.save()
+        await Messages.deleteOne({ messageId: msgId })
+      }
+    }
+
     for (let i = 0; i < messages.length; i++) {
       const profmsgs = messages[i].replies.filter(msg => msg.senderType === 'teachers' || msg.senderType === 'mentors')
       const studsmsgs = messages[i].replies.filter(msg => msg.senderType === 'students')
@@ -281,5 +325,57 @@ export const downvote = async (req, res) => {
     res.status(200).send({ len })
   } catch (err) {
     return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const reportMessage = async (req, res) => {
+  const msgId = req.params.id
+  const userId = req.body.userId
+  try {
+    const msg = await Messages.findOne({ messageId: msgId })
+    if (!msg) {
+      return res.status(404).send({ message: 'Not Found' })
+    }
+    if (msg.reports.includes(userId)) {
+      return res.status(200).send({ alreadyReported: true })
+    } else {
+      msg.reports.push(userId)
+      await msg.save()
+    }
+
+    return res.status(200).send({ alreadyReported: false })
+  } catch (err) {
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const uploadFile = async (req, res) => {
+  const file = req.file
+  const id = req.body.id
+  if (!file || file === undefined) {
+    return res.status(400).json({ error: 'No file uploaded' })
+  }
+  try {
+    // stmts
+
+    const uuid = Date.now().toString()
+    const result = await uploadImage(file, id, uuid)
+    const key = Buffer.from(result.path).toString('base64')
+    res.status(200).send({ key })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ message: 'Internal Server Error' })
+  }
+}
+
+export const getImage = async (req, res) => {
+  const imagePath = req.params.key
+  try {
+    const path = Buffer.from(imagePath, 'base64').toString('utf-8')
+    const readStream = await retrieveImage(path)
+    readStream.pipe(res)
+  } catch (err) {
+    console.log(err)
+    res.status(500).send('Internal Server Error')
   }
 }

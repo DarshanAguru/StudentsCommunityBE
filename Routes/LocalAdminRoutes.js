@@ -6,7 +6,7 @@ const LocalAdminRouter = express.Router()
 
 // login and Register
 LocalAdminRouter.post('/login', login)
-LocalAdminRouter.post('/register', register)
+LocalAdminRouter.put('/register', register)
 
 // requires Login and jwt middleware
 LocalAdminRouter.post('/verifyTeacher/:id', verifyToken, verifyTeacher)

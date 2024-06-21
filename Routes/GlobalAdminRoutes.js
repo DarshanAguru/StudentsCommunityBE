@@ -6,7 +6,7 @@ const GlobalAdminRouter = express.Router()
 
 // login and register
 GlobalAdminRouter.post('/login', login)
-GlobalAdminRouter.post('/register', register)
+GlobalAdminRouter.put('/register', register)
 
 // requires Login and jwt middleware
 GlobalAdminRouter.post('/verifyMentor/:id', verifyToken, verifyMentor)

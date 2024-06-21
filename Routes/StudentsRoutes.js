@@ -6,12 +6,12 @@ const StudentRouter = express.Router()
 
 // login and Register
 StudentRouter.post('/login', login)
-StudentRouter.post('/register', register)
+StudentRouter.put('/register', register)
 
 // requires Login and jwt middleware
-StudentRouter.post('/editDetails/:id', verifyToken, editDetails)
+StudentRouter.patch('/editDetails/:id', verifyToken, editDetails)
 StudentRouter.post('/getAssignment/:id', verifyToken, getAssignment)
-StudentRouter.post('/submitassignment/:id', verifyToken, submitAssignment)
+StudentRouter.put('/submitassignment/:id', verifyToken, submitAssignment)
 StudentRouter.post('/getAllAssignmentsForClass', verifyToken, getAllAssignmentsForClass)
 StudentRouter.post('/getallassignments', verifyToken, getAllAssignmentsBySchoolAndGradeAndSubject)
 StudentRouter.post('/getAssignmentScoreAndData/:id', verifyToken, getAssignmentScoreAndData)

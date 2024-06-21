@@ -6,7 +6,7 @@ const MentorRouter = express.Router()
 
 // login and Register
 MentorRouter.post('/login', login)
-MentorRouter.post('/register', register)
+MentorRouter.put('/register', register)
 
 // requires Login and jwt middleware
 MentorRouter.post('/editDetails/:id', verifyToken, editDetails)
